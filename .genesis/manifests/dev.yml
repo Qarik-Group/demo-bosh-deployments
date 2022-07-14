@@ -1,0 +1,669 @@
+azs:
+- cloud_properties:
+    availability_zone: us-west-2a
+  name: z1
+- cloud_properties:
+    availability_zone: us-west-2b
+  name: z2
+- cloud_properties:
+    availability_zone: us-west-2c
+  name: z3
+bosh-variables:
+  access_key_id: REDACTED
+  admin_password: REDACTED
+  credhub_admin_client_secret: REDACTED
+  credhub_cli_user_password: REDACTED
+  credhub_encryption_password: REDACTED
+  credhub_tls:
+    ca: REDACTED
+    certificate: REDACTED
+    private_key: REDACTED
+  default_key_name: vcap@dev
+  default_security_groups:
+  - sg-0b765bce78ba5949d
+  director_name: dev-bosh
+  director_ssl:
+    ca: REDACTED
+    certificate: REDACTED
+    private_key: REDACTED
+  hm_password: REDACTED
+  http_proxy: ""
+  https_proxy: ""
+  internal_ip: 10.4.16.4
+  internal_ntp:
+  - 169.254.169.123
+  nats_ca:
+    certificate: REDACTED
+    private_key: REDACTED
+  nats_clients_director_tls:
+    certificate: REDACTED
+    private_key: REDACTED
+  nats_clients_health_monitor_tls:
+    certificate: REDACTED
+    private_key: REDACTED
+  nats_password: REDACTED
+  nats_server_tls:
+    ca: REDACTED
+    certificate: REDACTED
+    private_key: REDACTED
+  no_proxy: ""
+  postgres_password: REDACTED
+  region: us-west-2
+  registry_password: REDACTED
+  s3-access-key-id: REDACTED
+  s3-bucket-name: s3-dev-bosh-buildpacks
+  s3-region: us-west-2
+  s3-secret-access-key: REDACTED
+  secret_access_key: REDACTED
+  trusted_ca_cert: ""
+  uaa_admin_client_secret: REDACTED
+  uaa_clients_director_to_credhub: REDACTED
+  uaa_encryption_key_1: REDACTED
+  uaa_jwt_signing_key:
+    private_key: REDACTED
+    public_key: REDACTED
+  uaa_service_provider_ssl:
+    certificate: REDACTED
+    private_key: REDACTED
+  uaa_ssl:
+    ca: REDACTED
+    certificate: REDACTED
+    private_key: REDACTED
+compilation:
+  az: z1
+  network: default
+  reuse_compilation_vms: true
+  vm_type: large
+  workers: 5
+disk_types:
+- cloud_properties:
+    type: gp2
+  disk_size: 3000
+  name: default
+- cloud_properties:
+    type: gp2
+  disk_size: 50000
+  name: large
+- cloud_properties:
+    type: gp2
+  disk_size: 50000
+  name: bosh
+exodus:
+  admin_password: REDACTED
+  admin_username: admin
+  blacksmith_password: REDACTED
+  blacksmith_user: blacksmith
+  bosh: uswest2demo
+  bosh-deployment-date: 2020-Nov-14 00:56:33 UTC
+  bosh-deployment-version: f518c39
+  ca_cert: REDACTED
+  credhub_ca_cert: ((credhub_tls.certificate))
+  credhub_password: ((credhub_cli_user_password))
+  credhub_url: https://10.4.16.4:8844
+  credhub_username: credhub_cli_user
+  dated: 2022-05-09 20:35:14 +0000
+  deployer: ubuntu
+  features: aws,s3-blobstore,bosh-cloud-properties,blacksmith-integration
+  is_director: true
+  kit_is_dev: false
+  kit_name: bosh
+  kit_version: 2.2.4
+  netop_sshkey: REDACTED
+  sysop_password: REDACTED
+  url: https://10.4.16.4:25555
+  use_create_env: false
+  vault_base: /secret/dev/bosh
+  version: 2.8.5
+genesis:
+  bosh_env: uswest2demo
+  ci_mount: /secret/ci/
+  env: dev
+  exodus_mount: /secret/exodus/
+  exodus_path: dev/bosh
+  min_version: 2.7.8
+  secrets_mount: /secret/
+  secrets_path: dev/bosh
+instance_groups:
+- azs:
+  - z1
+  cloud_properties:
+    ephemeral_disk:
+      size: 50000
+      type: gp2
+    instance_type: t3.medium
+  instances: 1
+  jobs:
+  - name: bpm
+    release: bpm
+  - name: nats
+    release: bosh
+  - name: postgres-10
+    release: bosh
+  - name: director
+    release: bosh
+  - name: health_monitor
+    release: bosh
+  - name: uaa
+    properties:
+      encryption:
+        active_key_label: uaa-encryption-key-1
+        encryption_keys:
+        - label: uaa-encryption-key-1
+          passphrase: ((uaa_encryption_key_1))
+      login:
+        saml:
+          activeKeyId: uaa-saml-key-1
+          keys:
+            uaa-saml-key-1:
+              certificate: ((uaa_service_provider_ssl.certificate))
+              key: ((uaa_service_provider_ssl.private_key))
+              passphrase: ""
+      uaa:
+        clients:
+          admin:
+            authorities: bosh.admin
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: ((admin_password))
+          blacksmith:
+            authorities: bosh.teams.blacksmith.admin,bosh.stemcells.upload,bosh.releases.upload
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: REDACTED
+          bosh_cli:
+            access-token-validity: 120
+            authorities: uaa.none
+            authorized-grant-types: password,refresh_token
+            override: true
+            refresh-token-validity: 86400
+            scope: openid,bosh.admin,bosh.read,bosh.*.admin,bosh.*.read,bosh.teams.*.admin,bosh.teams.*.read
+            secret: ""
+          concourse:
+            access-token-validity: 120
+            authorities: bosh.admin
+            authorized-grant-types: client_credentials
+            override: true
+            refresh-token-validity: 500
+            scope: ""
+            secret: REDACTED
+          credhub-admin:
+            access-token-validity: 3600
+            authorities: credhub.read,credhub.write
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: ((credhub_admin_client_secret))
+          credhub_cli:
+            access-token-validity: 60
+            authorities: ""
+            authorized-grant-types: password,refresh_token
+            override: true
+            refresh-token-validity: 1800
+            scope: credhub.read,credhub.write
+            secret: ""
+          credhub_cli_user:
+            access-token-validity: 3600
+            authorities: credhub.read,credhub.write
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: ((credhub_cli_user_password))
+          director_to_credhub:
+            access-token-validity: 3600
+            authorities: credhub.read,credhub.write
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: ((uaa_clients_director_to_credhub))
+          hm:
+            authorities: bosh.admin
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: ((hm_password))
+          prometheus:
+            authorities: bosh.read
+            authorized-grant-types: client_credentials, refresh_token
+            override: true
+            scope: bosh.read
+            secret: REDACTED
+          uaa_admin:
+            authorities: uaa.admin
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: ((uaa_admin_client_secret))
+        jwt:
+          policy:
+            active_key_id: uaa-jwt-key-1
+            keys:
+              uaa-jwt-key-1:
+                signingKey: ((uaa_jwt_signing_key.private_key))
+          revocable: true
+        scim:
+          groups:
+            bosh.admin: User has admin access on any Director
+            bosh.read: User has read access on any Director
+            bosh.releases.upload: User can upload new releases
+            bosh.stemcells.upload: User can upload new stemcells
+          users:
+          - groups:
+            - bosh.admin
+            name: admin
+            password: ((admin_password))
+          - groups:
+            - credhub.read
+            - credhub.write
+            name: credhub_cli_user
+            password: ((credhub_cli_user_password))
+          - groups:
+            - bosh.teams.blacksmith.admin
+            - bosh.stemcells.upload
+            - bosh.releases.upload
+            name: blacksmith
+            password: REDACTED
+        sslCertificate: ((uaa_ssl.certificate))
+        sslPrivateKey: ((uaa_ssl.private_key))
+        url: https://((internal_ip)):8443
+        zones:
+          internal:
+            hostnames:
+            - ((internal_ip))
+      uaadb:
+        address: 127.0.0.1
+        databases:
+        - name: uaa
+          tag: uaa
+        db_scheme: postgresql
+        port: 5432
+        roles:
+        - name: postgres
+          password: ((postgres_password))
+          tag: admin
+        tls: disabled
+    release: uaa
+  - name: bbr-uaadb
+    properties:
+      release_level_backup: true
+      uaadb:
+        address: 127.0.0.1
+        databases:
+        - name: uaa
+          tag: uaa
+        db_scheme: postgresql
+        port: 5432
+        roles:
+        - name: postgres
+          password: ((postgres_password))
+          tag: admin
+    release: uaa
+  - name: credhub
+    properties:
+      credhub:
+        authentication:
+          uaa:
+            ca_certs:
+            - ((uaa_ssl.ca))
+            url: https://((internal_ip)):8443
+            verification_key: ((uaa_jwt_signing_key.public_key))
+        authorization:
+          acls:
+            enabled: false
+        certificates:
+          concatenate_cas: true
+        data_storage:
+          database: credhub
+          host: 127.0.0.1
+          password: ((postgres_password))
+          port: 5432
+          require_tls: false
+          type: postgres
+          username: postgres
+        encryption:
+          keys:
+          - active: true
+            key_properties:
+              encryption_password: ((credhub_encryption_password))
+            provider_name: internal
+          providers:
+          - name: internal
+            type: internal
+        tls: ((credhub_tls))
+    release: credhub
+  - name: bbr-credhubdb
+    properties:
+      credhub:
+        data_storage:
+          database: credhub
+          host: 127.0.0.1
+          password: ((postgres_password))
+          port: 5432
+          require_tls: false
+          type: postgres
+          username: postgres
+      release_level_backup: true
+    release: credhub
+  - name: registry
+    release: bosh
+  - name: aws_cpi
+    release: bosh-aws-cpi
+  - name: user_add
+    properties:
+      persistent_homes: true
+      users:
+      - name: netop
+        public_key: REDACTED
+      - crypted_password: REDACTED
+        name: sysop
+    release: os-conf
+  name: bosh
+  networks:
+  - name: dev
+    static_ips:
+    - ((internal_ip))
+  persistent_disk_type: bosh
+  properties:
+    agent:
+      env:
+        bosh:
+          blobstores:
+          - options:
+              access_key_id: ((s3-access-key-id))
+              bucket_name: ((s3-bucket-name))
+              region: ((s3-region))
+              secret_access_key: ((s3-secret-access-key))
+            provider: s3
+          ntp: ((internal_ntp))
+      mbus: nats://natsuser:((nats_password))@((internal_ip)):4222
+    aws:
+      access_key_id: ((access_key_id))
+      default_key_name: ((default_key_name))
+      default_security_groups: ((default_security_groups))
+      encrypted: false
+      region: ((region))
+      secret_access_key: ((secret_access_key))
+    blobstore:
+      access_key_id: ((s3-access-key-id))
+      bucket_name: ((s3-bucket-name))
+      provider: s3
+      s3_region: ((s3-region))
+      secret_access_key: ((s3-secret-access-key))
+    director:
+      address: 127.0.0.1
+      config_server:
+        ca_cert: ((credhub_tls.ca))
+        enabled: true
+        uaa:
+          ca_cert: ((uaa_ssl.ca))
+          client_id: director_to_credhub
+          client_secret: ((uaa_clients_director_to_credhub))
+          url: https://((internal_ip)):8443
+        url: https://((internal_ip)):8844/api/
+      cpi_job: aws_cpi
+      db:
+        adapter: postgres
+        database: bosh
+        host: 127.0.0.1
+        listen_address: 127.0.0.1
+        password: ((postgres_password))
+        user: postgres
+      enable_dedicated_status_worker: true
+      enable_nats_delivered_templates: true
+      enable_post_deploy: true
+      events:
+        record_events: true
+      flush_arp: true
+      generate_vm_passwords: true
+      local_dns:
+        enabled: true
+        use_dns_addresses: true
+      name: ((director_name))
+      remove_dev_tools: true
+      ssl:
+        cert: ((director_ssl.certificate))
+        key: ((director_ssl.private_key))
+      trusted_certs: ((trusted_ca_cert))
+      user_management:
+        provider: uaa
+        uaa:
+          public_key: ((uaa_jwt_signing_key.public_key))
+          url: https://((internal_ip)):8443
+      workers: 4
+    env:
+      http_proxy: ((http_proxy))
+      https_proxy: ((https_proxy))
+      no_proxy: ((no_proxy))
+    hm:
+      director_account:
+        ca_cert: ((director_ssl.ca))
+        client_id: hm
+        client_secret: ((hm_password))
+        password: ((hm_password))
+        user: hm
+      resurrector:
+        minimum_down_jobs: 5
+        percent_threshold: 0.2
+        time_threshold: 600
+      resurrector_enabled: true
+    nats:
+      address: ((internal_ip))
+      password: ((nats_password))
+      tls:
+        ca: ((nats_server_tls.ca))
+        client_ca:
+          certificate: ((nats_ca.certificate))
+          private_key: ((nats_ca.private_key))
+        director:
+          certificate: ((nats_clients_director_tls.certificate))
+          private_key: ((nats_clients_director_tls.private_key))
+        health_monitor:
+          certificate: ((nats_clients_health_monitor_tls.certificate))
+          private_key: ((nats_clients_health_monitor_tls.private_key))
+        server:
+          certificate: ((nats_server_tls.certificate))
+          private_key: ((nats_server_tls.private_key))
+      user: natsuser
+    postgres:
+      adapter: postgres
+      additional_databases:
+      - uaa
+      - credhub
+      database: bosh
+      host: 127.0.0.1
+      listen_address: 127.0.0.1
+      password: ((postgres_password))
+      user: postgres
+    registry:
+      address: ((internal_ip))
+      db:
+        adapter: postgres
+        database: bosh
+        host: 127.0.0.1
+        password: ((postgres_password))
+        user: postgres
+      host: ((internal_ip))
+      http:
+        password: ((registry_password))
+        port: 25777
+        user: registry
+      password: ((registry_password))
+      port: 25777
+      username: registry
+  stemcell: default
+  vm_type: bosh
+kit:
+  features:
+  - aws
+  - s3-blobstore
+  - bosh-cloud-properties
+  - blacksmith-integration
+  name: bosh
+  version: 2.2.4
+meta:
+  vault: /secret/dev/bosh
+name: dev-bosh
+networks:
+- name: default
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-0f56fcba8b1ba95b3
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.1.1
+    range: 10.4.1.0/24
+    reserved:
+    - 10.4.1.0-10.4.1.5
+    static:
+    - 10.4.1.6-10.4.1.16
+  - azs:
+    - z2
+    cloud_properties:
+      subnet: subnet-04066d0a30fd1c020
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.2.1
+    range: 10.4.2.0/24
+    reserved:
+    - 10.4.2.0-10.4.2.5
+    static:
+    - 10.4.2.6-10.4.2.16
+  - azs:
+    - z3
+    cloud_properties:
+      subnet: subnet-0f2b10a0d103f3c83
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.3.1
+    range: 10.4.3.0/24
+    reserved:
+    - 10.4.3.0-10.4.3.5
+    static:
+    - 10.4.3.6-10.4.3.16
+  type: manual
+- name: dev
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-0ea631cc3ad19e04f
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.16.1
+    range: 10.4.16.0/24
+    reserved:
+    - 10.4.16.0-10.4.16.3
+    static:
+    - 10.4.16.4-10.4.16.16
+  - azs:
+    - z2
+    cloud_properties:
+      subnet: subnet-09a05edb82702379b
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.17.1
+    range: 10.4.17.0/24
+    reserved:
+    - 10.4.17.0-10.4.17.3
+    static:
+    - 10.4.17.4-10.4.17.16
+  - azs:
+    - z3
+    cloud_properties:
+      subnet: subnet-0dd034854c197dc41
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.18.1
+    range: 10.4.18.0/24
+    reserved:
+    - 10.4.18.0-10.4.18.3
+    static:
+    - 10.4.18.4-10.4.18.16
+  type: manual
+params:
+  aws_default_sgs:
+  - sg-0b765bce78ba5949d
+  aws_ebs_encryption: false
+  aws_key_name: vcap@dev
+  aws_region: us-west-2
+  bosh_disk_pool: bosh
+  bosh_disk_type: large
+  bosh_hostname: bosh
+  bosh_network: dev
+  bosh_vm_type: bosh
+  ca_validity_period: 5y
+  cert_validity_period: 1y
+  dns_cache: false
+  ntp:
+  - 169.254.169.123
+  remove_dev_tools: true
+  resurrector_minimum_down_jobs: 5
+  resurrector_percent_threshold: 0.2
+  resurrector_time_threshold: 600
+  s3_blobstore_bucket: s3-dev-bosh-buildpacks
+  s3_blobstore_region: us-west-2
+  session_timeout: 1
+  static_ip: 10.4.16.4
+releases:
+- name: bosh
+  sha1: 1eeb5067d342909b68cf5a38783a3421c2f53f55
+  url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-271.17.0-ubuntu-bionic-1.41-20211209-104853-348622355-20211209104855.tgz
+  version: 271.17.0
+- name: bpm
+  sha1: 9e8f0c84773523139e4bf02ec80fea872b04f9aa
+  url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bpm-1.1.15-ubuntu-bionic-1.41-20211209-104652-483576868-20211209104654.tgz
+  version: 1.1.15
+- name: uaa
+  sha1: 2583ae134bbe2c597246cca16c80de0b1b1543ef
+  url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/uaa-75.12.0-ubuntu-bionic-1.41-20211215-200249-606597073-20211215200253.tgz
+  version: 75.12.0
+- name: credhub
+  sha1: 5d0ff2e54abee6380013e09e5d796e42a5add0a3
+  url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/credhub-2.11.0-ubuntu-bionic-1.41-20211215-181021-327151235-20211215181022.tgz
+  version: 2.11.0
+- name: bosh-aws-cpi
+  sha1: c8fdf45dd3baa0c85f5f64b472b55b2ff3432cb4
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh-aws-cpi-release?v=91
+  version: 91
+- name: os-conf
+  sha1: 386293038ae3d00813eaa475b4acf63f8da226ef
+  url: https://bosh.io/d/github.com/cloudfoundry/os-conf-release?v=22.1.2
+  version: 22.1.2
+stemcells:
+- alias: default
+  os: ubuntu-bionic
+  version: latest
+update:
+  canaries: 1
+  canary_watch_time: 30000-600000
+  max_in_flight: 1
+  serial: true
+  update_watch_time: 30000-600000
+vm_types:
+- cloud_properties:
+    ephemeral_disk:
+      size: 3000
+      type: gp2
+    instance_type: t2.small
+  name: default
+- cloud_properties:
+    ephemeral_disk:
+      size: 30000
+      type: gp2
+    instance_type: t3.large
+  name: large
+- cloud_properties:
+    ephemeral_disk:
+      size: 25000
+      type: gp2
+    instance_type: t3.medium
+  name: bosh

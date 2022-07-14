@@ -1,0 +1,7 @@
+- path: /instance_groups/name=bosh/cloud_properties?
+  type: replace
+  value:
+    ephemeral_disk:
+      size: 50000
+      type: gp2
+    instance_type: t3.medium

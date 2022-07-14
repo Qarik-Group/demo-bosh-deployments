@@ -1,3 +1,15 @@
+# Update Cloud Configs
+```
+boshd dev update-config --type cloud --name dev ./configs/cloud/dev.yml
+boshd uswest2demo update-config --type cloud --name default ./configs/cloud/uswest2demo.yml
+```
+
+# Update Runtime Configs
+```
+boshd dev update-config --type runtime --name dev ./configs/runtime/dev.yml
+boshd uswest2demo update-config --type runtime --name default ./configs/runtime/uswest2demo.yml
+```
+
 bosh deployments
 ==============================
 
