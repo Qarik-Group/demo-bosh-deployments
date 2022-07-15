@@ -1,0 +1,42 @@
+kit:
+  name:    bosh
+  version: 2.2.4
+  features:
+    - aws
+    - s3-blobstore
+    - bosh-cloud-properties
+    - blacksmith-integration
+      #    - disable-blobstore-creds-on-disk
+
+genesis:
+  env:            dev
+  bosh_env:       uswest2demo 
+  min_version:    2.7.8
+
+params:
+  # These parameters are all that we need to specify for an Environment
+  # BOSH, since networking and VM type configuration comes from that cloud-config
+  #
+  static_ip: 10.4.16.4
+
+  # BOSH on AWS needs to know what region to deploy to, and what
+  # default security groups to apply to all VMs by default.
+  #
+  # AWS credentials are stored in the Vault at
+  #   /secret/uswest2demo/dev/bosh/aws
+  #
+  aws_region: us-west-2
+  aws_default_sgs:
+    - sg-0b765bce78ba5949d
+
+  # DNS Caching (for runtime config)
+  dns_cache: false
+
+  s3_blobstore_bucket: s3-dev-bosh-buildpacks
+  s3_blobstore_region: us-west-2
+
+  bosh_network: dev
+  bosh_vm_type: bosh
+  bosh_disk_type: large
+  bosh_disk_pool: bosh
+
