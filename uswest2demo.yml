@@ -1,6 +1,6 @@
 kit:
   name:    bosh
-  version: 2.2.5
+  version: 2.2.4
   features:
     - aws
     - proto
