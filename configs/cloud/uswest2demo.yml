@@ -42,13 +42,6 @@ disk_types:
   disk_size: 10_240
   cloud_properties: {type: gp3}
 
-compilation:
-  workers: 5
-  reuse_compilation_vms: true
-  az: z1
-  vm_type: large
-  network: default
-
 networks:
 - name: default
   type: manual

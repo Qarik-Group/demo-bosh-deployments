@@ -1,15 +1,16 @@
 pipeline:
   name: bosh-platform-pipeline
   git:
-    owner: genesis-community
-    repo:  bosh-genesis-kit
-    private_key: (( vault "concourse/main/github:private_key" ))
+    owner: starkandwayne
+    repo:  demo-bosh-deployments
+    branch: master
+    private_key: (( vault "concourse/demo/bosh/github:private_key" ))
 
   vault:
     url:    https://10.4.1.7
-    verify: yes
-    role: (( vault "concourse/genesis/vault:role_id" ))
-    secret: (( vault "concourse/genesis/vault:secret_id" ))
+    verify: no
+    role: (( vault "secret/uswest2demo/full/concourse/approle/concourse:approle-id" ))
+    secret: (( vault "secret/uswest2demo/full/concourse/approle/concourse:approle-secret" ))
   
   slack:
     channel: '#botspam'
