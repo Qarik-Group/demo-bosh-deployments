@@ -6,7 +6,7 @@ kit:
     - s3-blobstore
     - bosh-cloud-properties
     - blacksmith-integration
-      #    - disable-blobstore-creds-on-disk
+    # - disable-blobstore-creds-on-disk
 
 genesis:
   env:            dev
