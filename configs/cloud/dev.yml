@@ -115,7 +115,7 @@ vm_extensions:
   - name: diego-ssh-proxy-network-properties
 
 networks:
-- name: default
+- name: dev
   type: manual
   subnets:
   - range: 10.4.16.0/24
