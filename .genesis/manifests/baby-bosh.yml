@@ -18,10 +18,10 @@ bosh-variables:
     ca: REDACTED
     certificate: REDACTED
     private_key: REDACTED
-  default_key_name: vcap@dev
+  default_key_name: vcap@baby-bosh
   default_security_groups:
-  - sg-0b765bce78ba5949d
-  director_name: dev-bosh
+  - sg-06c4487cfe277c93d
+  director_name: baby-bosh-bosh
   director_ssl:
     ca: REDACTED
     certificate: REDACTED
@@ -29,7 +29,7 @@ bosh-variables:
   hm_password: REDACTED
   http_proxy: ""
   https_proxy: ""
-  internal_ip: 10.4.16.4
+  internal_ip: 10.4.63.4
   internal_ntp:
   - 169.254.169.123
   nats_ca:
@@ -47,7 +47,6 @@ bosh-variables:
     certificate: REDACTED
     private_key: REDACTED
   no_proxy: ""
-  postgres_password: REDACTED
   region: us-west-2
   registry_password: REDACTED
   s3-access-key-id: REDACTED
@@ -95,53 +94,44 @@ disk_types:
 exodus:
   admin_password: REDACTED
   admin_username: admin
-  blacksmith_password: REDACTED
-  blacksmith_user: blacksmith
   bosh: uswest2demo
   bosh-deployment-date: 2020-Nov-14 00:56:33 UTC
   bosh-deployment-version: f518c39
   ca_cert: REDACTED
   credhub_ca_cert: ((credhub_tls.certificate))
   credhub_password: ((credhub_cli_user_password))
-  credhub_url: https://10.4.16.4:8844
+  credhub_url: https://10.4.63.4:8844
   credhub_username: credhub_cli_user
-  dated: 2022-07-27 11:52:57 +0000
-  deployer: unknown
-  features: aws,s3-blobstore,bosh-cloud-properties,blacksmith-integration
+  dated: 2022-07-22 04:22:50 +0000
+  deployer: ubuntu
+  features: aws,bosh-dns-healthcheck,external-db-postgres,s3-blobstore,no-registry
   is_director: true
   kit_is_dev: false
   kit_name: bosh
   kit_version: 2.2.4
   netop_sshkey: REDACTED
   sysop_password: REDACTED
-  url: https://10.4.16.4:25555
+  url: https://10.4.63.4:25555
   use_create_env: false
-  vault_base: /secret/dev/bosh
-  version: 2.8.4
+  vault_base: /secret/baby/bosh/bosh
+  version: 2.8.5
 genesis:
   bosh_env: uswest2demo
   ci_mount: /secret/ci/
-  env: dev
+  env: baby-bosh
   exodus_mount: /secret/exodus/
-  exodus_path: dev/bosh
+  exodus_path: baby-bosh/bosh
   min_version: 2.7.8
   secrets_mount: /secret/
-  secrets_path: dev/bosh
+  secrets_path: baby/bosh/bosh
 instance_groups:
 - azs:
   - z1
-  cloud_properties:
-    ephemeral_disk:
-      size: 50000
-      type: gp2
-    instance_type: t3.medium
   instances: 1
   jobs:
   - name: bpm
     release: bpm
   - name: nats
-    release: bosh
-  - name: postgres-10
     release: bosh
   - name: director
     release: bosh
@@ -163,6 +153,32 @@ instance_groups:
               key: ((uaa_service_provider_ssl.private_key))
               passphrase: ""
       uaa:
+        ca_certs:
+        - |
+          -----BEGIN CERTIFICATE-----
+          MIIEBjCCAu6gAwIBAgIJAMc0ZzaSUK51MA0GCSqGSIb3DQEBCwUAMIGPMQswCQYD
+          VQQGEwJVUzEQMA4GA1UEBwwHU2VhdHRsZTETMBEGA1UECAwKV2FzaGluZ3RvbjEi
+          MCAGA1UECgwZQW1hem9uIFdlYiBTZXJ2aWNlcywgSW5jLjETMBEGA1UECwwKQW1h
+          em9uIFJEUzEgMB4GA1UEAwwXQW1hem9uIFJEUyBSb290IDIwMTkgQ0EwHhcNMTkw
+          ODIyMTcwODUwWhcNMjQwODIyMTcwODUwWjCBjzELMAkGA1UEBhMCVVMxEDAOBgNV
+          BAcMB1NlYXR0bGUxEzARBgNVBAgMCldhc2hpbmd0b24xIjAgBgNVBAoMGUFtYXpv
+          biBXZWIgU2VydmljZXMsIEluYy4xEzARBgNVBAsMCkFtYXpvbiBSRFMxIDAeBgNV
+          BAMMF0FtYXpvbiBSRFMgUm9vdCAyMDE5IENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
+          AQ8AMIIBCgKCAQEArXnF/E6/Qh+ku3hQTSKPMhQQlCpoWvnIthzX6MK3p5a0eXKZ
+          oWIjYcNNG6UwJjp4fUXl6glp53Jobn+tWNX88dNH2n8DVbppSwScVE2LpuL+94vY
+          0EYE/XxN7svKea8YvlrqkUBKyxLxTjh+U/KrGOaHxz9v0l6ZNlDbuaZw3qIWdD/I
+          6aNbGeRUVtpM6P+bWIoxVl/caQylQS6CEYUk+CpVyJSkopwJlzXT07tMoDL5WgX9
+          O08KVgDNz9qP/IGtAcRduRcNioH3E9v981QO1zt/Gpb2f8NqAjUUCUZzOnij6mx9
+          McZ+9cWX88CRzR0vQODWuZscgI08NvM69Fn2SQIDAQABo2MwYTAOBgNVHQ8BAf8E
+          BAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUc19g2LzLA5j0Kxc0LjZa
+          pmD/vB8wHwYDVR0jBBgwFoAUc19g2LzLA5j0Kxc0LjZapmD/vB8wDQYJKoZIhvcN
+          AQELBQADggEBAHAG7WTmyjzPRIM85rVj+fWHsLIvqpw6DObIjMWokpliCeMINZFV
+          ynfgBKsf1ExwbvJNzYFXW6dihnguDG9VMPpi2up/ctQTN8tm9nDKOy08uNZoofMc
+          NUZxKCEkVKZv+IL4oHoeayt8egtv3ujJM6V14AstMQ6SwvwvA93EP/Ug2e4WAXHu
+          cbI1NAbUgVDqp+DRdfvZkgYKryjTWd/0+1fS8X1bBZVWzl7eirNVnHbSH2ZDpNuY
+          0SBd8dj5F6ld3t58ydZbrTHze7JJOd8ijySAp4/kiu9UfZWuTPABzDa/DSdz9Dk/
+          zPW4CXXvhLmE02TA9/HeCw3KEHIwicNuEfw=
+          -----END CERTIFICATE-----
         clients:
           admin:
             authorities: bosh.admin
@@ -170,12 +186,6 @@ instance_groups:
             override: true
             scope: ""
             secret: ((admin_password))
-          blacksmith:
-            authorities: bosh.teams.blacksmith.admin,bosh.stemcells.upload,bosh.releases.upload
-            authorized-grant-types: client_credentials
-            override: true
-            scope: ""
-            secret: REDACTED
           bosh_cli:
             access-token-validity: 120
             authorities: uaa.none
@@ -262,12 +272,6 @@ instance_groups:
             - credhub.write
             name: credhub_cli_user
             password: ((credhub_cli_user_password))
-          - groups:
-            - bosh.teams.blacksmith.admin
-            - bosh.stemcells.upload
-            - bosh.releases.upload
-            name: blacksmith
-            password: REDACTED
         sslCertificate: ((uaa_ssl.certificate))
         sslPrivateKey: ((uaa_ssl.private_key))
         url: https://((internal_ip)):8443
@@ -276,32 +280,33 @@ instance_groups:
             hostnames:
             - ((internal_ip))
       uaadb:
-        address: 127.0.0.1
+        address: baby-bosh-db-instance.cmziohdu4x1g.us-west-2.rds.amazonaws.com
         databases:
         - name: uaa
           tag: uaa
-        db_scheme: postgresql
+        db_scheme: postgres
         port: 5432
         roles:
-        - name: postgres
-          password: ((postgres_password))
+        - name: uaa
+          password: REDACTED
           tag: admin
-        tls: disabled
+        tls: enabled
     release: uaa
   - name: bbr-uaadb
     properties:
       release_level_backup: true
       uaadb:
-        address: 127.0.0.1
+        address: baby-bosh-db-instance.cmziohdu4x1g.us-west-2.rds.amazonaws.com
         databases:
         - name: uaa
           tag: uaa
-        db_scheme: postgresql
+        db_scheme: postgres
         port: 5432
         roles:
-        - name: postgres
-          password: ((postgres_password))
+        - name: uaa
+          password: REDACTED
           tag: admin
+        tls: enabled
     release: uaa
   - name: credhub
     properties:
@@ -319,12 +324,37 @@ instance_groups:
           concatenate_cas: true
         data_storage:
           database: credhub
-          host: 127.0.0.1
-          password: ((postgres_password))
+          host: baby-bosh-db-instance.cmziohdu4x1g.us-west-2.rds.amazonaws.com
+          password: REDACTED
           port: 5432
-          require_tls: false
+          require_tls: true
+          tls_ca: |
+            -----BEGIN CERTIFICATE-----
+            MIIEBjCCAu6gAwIBAgIJAMc0ZzaSUK51MA0GCSqGSIb3DQEBCwUAMIGPMQswCQYD
+            VQQGEwJVUzEQMA4GA1UEBwwHU2VhdHRsZTETMBEGA1UECAwKV2FzaGluZ3RvbjEi
+            MCAGA1UECgwZQW1hem9uIFdlYiBTZXJ2aWNlcywgSW5jLjETMBEGA1UECwwKQW1h
+            em9uIFJEUzEgMB4GA1UEAwwXQW1hem9uIFJEUyBSb290IDIwMTkgQ0EwHhcNMTkw
+            ODIyMTcwODUwWhcNMjQwODIyMTcwODUwWjCBjzELMAkGA1UEBhMCVVMxEDAOBgNV
+            BAcMB1NlYXR0bGUxEzARBgNVBAgMCldhc2hpbmd0b24xIjAgBgNVBAoMGUFtYXpv
+            biBXZWIgU2VydmljZXMsIEluYy4xEzARBgNVBAsMCkFtYXpvbiBSRFMxIDAeBgNV
+            BAMMF0FtYXpvbiBSRFMgUm9vdCAyMDE5IENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
+            AQ8AMIIBCgKCAQEArXnF/E6/Qh+ku3hQTSKPMhQQlCpoWvnIthzX6MK3p5a0eXKZ
+            oWIjYcNNG6UwJjp4fUXl6glp53Jobn+tWNX88dNH2n8DVbppSwScVE2LpuL+94vY
+            0EYE/XxN7svKea8YvlrqkUBKyxLxTjh+U/KrGOaHxz9v0l6ZNlDbuaZw3qIWdD/I
+            6aNbGeRUVtpM6P+bWIoxVl/caQylQS6CEYUk+CpVyJSkopwJlzXT07tMoDL5WgX9
+            O08KVgDNz9qP/IGtAcRduRcNioH3E9v981QO1zt/Gpb2f8NqAjUUCUZzOnij6mx9
+            McZ+9cWX88CRzR0vQODWuZscgI08NvM69Fn2SQIDAQABo2MwYTAOBgNVHQ8BAf8E
+            BAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUc19g2LzLA5j0Kxc0LjZa
+            pmD/vB8wHwYDVR0jBBgwFoAUc19g2LzLA5j0Kxc0LjZapmD/vB8wDQYJKoZIhvcN
+            AQELBQADggEBAHAG7WTmyjzPRIM85rVj+fWHsLIvqpw6DObIjMWokpliCeMINZFV
+            ynfgBKsf1ExwbvJNzYFXW6dihnguDG9VMPpi2up/ctQTN8tm9nDKOy08uNZoofMc
+            NUZxKCEkVKZv+IL4oHoeayt8egtv3ujJM6V14AstMQ6SwvwvA93EP/Ug2e4WAXHu
+            cbI1NAbUgVDqp+DRdfvZkgYKryjTWd/0+1fS8X1bBZVWzl7eirNVnHbSH2ZDpNuY
+            0SBd8dj5F6ld3t58ydZbrTHze7JJOd8ijySAp4/kiu9UfZWuTPABzDa/DSdz9Dk/
+            zPW4CXXvhLmE02TA9/HeCw3KEHIwicNuEfw=
+            -----END CERTIFICATE-----
           type: postgres
-          username: postgres
+          username: credhub
         encryption:
           keys:
           - active: true
@@ -341,16 +371,14 @@ instance_groups:
       credhub:
         data_storage:
           database: credhub
-          host: 127.0.0.1
-          password: ((postgres_password))
+          host: baby-bosh-db-instance.cmziohdu4x1g.us-west-2.rds.amazonaws.com
+          password: REDACTED
           port: 5432
-          require_tls: false
+          require_tls: true
           type: postgres
-          username: postgres
+          username: credhub
       release_level_backup: true
     release: credhub
-  - name: registry
-    release: bosh
   - name: aws_cpi
     release: bosh-aws-cpi
   - name: user_add
@@ -364,7 +392,7 @@ instance_groups:
     release: os-conf
   name: bosh
   networks:
-  - name: dev
+  - name: baby
     static_ips:
     - ((internal_ip))
   persistent_disk_type: bosh
@@ -409,10 +437,39 @@ instance_groups:
       db:
         adapter: postgres
         database: bosh
-        host: 127.0.0.1
+        host: baby-bosh-db-instance.cmziohdu4x1g.us-west-2.rds.amazonaws.com
         listen_address: 127.0.0.1
-        password: ((postgres_password))
-        user: postgres
+        password: REDACTED
+        port: 5432
+        tls:
+          cert:
+            ca: |
+              -----BEGIN CERTIFICATE-----
+              MIIEBjCCAu6gAwIBAgIJAMc0ZzaSUK51MA0GCSqGSIb3DQEBCwUAMIGPMQswCQYD
+              VQQGEwJVUzEQMA4GA1UEBwwHU2VhdHRsZTETMBEGA1UECAwKV2FzaGluZ3RvbjEi
+              MCAGA1UECgwZQW1hem9uIFdlYiBTZXJ2aWNlcywgSW5jLjETMBEGA1UECwwKQW1h
+              em9uIFJEUzEgMB4GA1UEAwwXQW1hem9uIFJEUyBSb290IDIwMTkgQ0EwHhcNMTkw
+              ODIyMTcwODUwWhcNMjQwODIyMTcwODUwWjCBjzELMAkGA1UEBhMCVVMxEDAOBgNV
+              BAcMB1NlYXR0bGUxEzARBgNVBAgMCldhc2hpbmd0b24xIjAgBgNVBAoMGUFtYXpv
+              biBXZWIgU2VydmljZXMsIEluYy4xEzARBgNVBAsMCkFtYXpvbiBSRFMxIDAeBgNV
+              BAMMF0FtYXpvbiBSRFMgUm9vdCAyMDE5IENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
+              AQ8AMIIBCgKCAQEArXnF/E6/Qh+ku3hQTSKPMhQQlCpoWvnIthzX6MK3p5a0eXKZ
+              oWIjYcNNG6UwJjp4fUXl6glp53Jobn+tWNX88dNH2n8DVbppSwScVE2LpuL+94vY
+              0EYE/XxN7svKea8YvlrqkUBKyxLxTjh+U/KrGOaHxz9v0l6ZNlDbuaZw3qIWdD/I
+              6aNbGeRUVtpM6P+bWIoxVl/caQylQS6CEYUk+CpVyJSkopwJlzXT07tMoDL5WgX9
+              O08KVgDNz9qP/IGtAcRduRcNioH3E9v981QO1zt/Gpb2f8NqAjUUCUZzOnij6mx9
+              McZ+9cWX88CRzR0vQODWuZscgI08NvM69Fn2SQIDAQABo2MwYTAOBgNVHQ8BAf8E
+              BAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUc19g2LzLA5j0Kxc0LjZa
+              pmD/vB8wHwYDVR0jBBgwFoAUc19g2LzLA5j0Kxc0LjZapmD/vB8wDQYJKoZIhvcN
+              AQELBQADggEBAHAG7WTmyjzPRIM85rVj+fWHsLIvqpw6DObIjMWokpliCeMINZFV
+              ynfgBKsf1ExwbvJNzYFXW6dihnguDG9VMPpi2up/ctQTN8tm9nDKOy08uNZoofMc
+              NUZxKCEkVKZv+IL4oHoeayt8egtv3ujJM6V14AstMQ6SwvwvA93EP/Ug2e4WAXHu
+              cbI1NAbUgVDqp+DRdfvZkgYKryjTWd/0+1fS8X1bBZVWzl7eirNVnHbSH2ZDpNuY
+              0SBd8dj5F6ld3t58ydZbrTHze7JJOd8ijySAp4/kiu9UfZWuTPABzDa/DSdz9Dk/
+              zPW4CXXvhLmE02TA9/HeCw3KEHIwicNuEfw=
+              -----END CERTIFICATE-----
+          enabled: true
+        user: bosh
       enable_dedicated_status_worker: true
       enable_nats_delivered_templates: true
       enable_post_deploy: true
@@ -469,45 +526,29 @@ instance_groups:
           certificate: ((nats_server_tls.certificate))
           private_key: ((nats_server_tls.private_key))
       user: natsuser
-    postgres:
-      adapter: postgres
-      additional_databases:
-      - uaa
-      - credhub
-      database: bosh
-      host: 127.0.0.1
-      listen_address: 127.0.0.1
-      password: ((postgres_password))
-      user: postgres
-    registry:
-      address: ((internal_ip))
-      db:
-        adapter: postgres
-        database: bosh
-        host: 127.0.0.1
-        password: ((postgres_password))
-        user: postgres
-      host: ((internal_ip))
-      http:
-        password: ((registry_password))
-        port: 25777
-        user: registry
-      password: ((registry_password))
-      port: 25777
-      username: registry
   stemcell: default
-  vm_type: bosh
+  vm_type: large
 kit:
   features:
   - aws
+  - bosh-dns-healthcheck
+  - external-db-postgres
   - s3-blobstore
-  - bosh-cloud-properties
-  - blacksmith-integration
+  - no-registry
   name: bosh
   version: 2.2.4
 meta:
-  vault: /secret/dev/bosh
-name: dev-bosh
+  registry_db:
+    adapter: postgres
+    database: bosh
+    host: baby-bosh-db-instance.cmziohdu4x1g.us-west-2.rds.amazonaws.com
+    password: REDACTED
+    port: 5432
+    tls:
+      enabled: true
+    user: bosh
+  vault: /secret/baby/bosh/bosh
+name: baby-bosh-bosh
 networks:
 - name: default
   subnets:
@@ -635,51 +676,6 @@ networks:
     static:
     - 10.4.3.150-10.4.3.156
   type: manual
-<<<<<<< HEAD
-- name: concourse-full-dr
-  subnets:
-  - azs:
-    - z1
-    cloud_properties:
-      subnet: subnet-0f56fcba8b1ba95b3
-    dns:
-    - 1.1.1.1
-    - 8.8.4.4
-    gateway: 10.4.1.1
-    range: 10.4.1.0/24
-    reserved:
-    - 10.4.1.0-10.4.1.99
-    static:
-    - 10.4.1.170-10.4.1.176
-  - azs:
-    - z2
-    cloud_properties:
-      subnet: subnet-04066d0a30fd1c020
-    dns:
-    - 1.1.1.1
-    - 8.8.4.4
-    gateway: 10.4.2.1
-    range: 10.4.2.0/24
-    reserved:
-    - 10.4.2.0-10.4.2.99
-    static:
-    - 10.4.2.170-10.4.2.176
-  - azs:
-    - z3
-    cloud_properties:
-      subnet: subnet-0f2b10a0d103f3c83
-    dns:
-    - 1.1.1.1
-    - 8.8.4.4
-    gateway: 10.4.3.1
-    range: 10.4.3.0/24
-    reserved:
-    - 10.4.3.0-10.4.3.99
-    static:
-    - 10.4.3.170-10.4.3.176
-  type: manual
-=======
->>>>>>> Push latestes changes from Bastion to git
 - name: dev
   subnets:
   - azs:
@@ -736,42 +732,51 @@ networks:
     reserved:
     - 10.4.63.0-10.4.63.3
     static:
-<<<<<<< HEAD
     - 10.4.63.4-10.4.63.6
-  type: manual
-- name: vault-br
-  subnets:
-  - azs:
-    - z1
-    cloud_properties:
-      subnet: subnet-0c7b77e3f74bc0b12
-    dns:
-    - 1.1.1.1
-    - 8.8.4.4
-    gateway: 10.4.67.1
-    range: 10.4.67.0/24
-    reserved:
-    - 10.4.67.0-10.4.67.3
-    static:
-    - 10.4.67.4-10.4.67.6
-=======
-    - 10.4.63.4-10.4.63.16
->>>>>>> Push latestes changes from Bastion to git
   type: manual
 params:
   aws_default_sgs:
-  - sg-0b765bce78ba5949d
+  - sg-06c4487cfe277c93d
   aws_ebs_encryption: false
-  aws_key_name: vcap@dev
+  aws_key_name: vcap@baby-bosh
   aws_region: us-west-2
+  bosh_db_name: bosh
+  bosh_db_user: bosh
   bosh_disk_pool: bosh
-  bosh_disk_type: large
   bosh_hostname: bosh
-  bosh_network: dev
-  bosh_vm_type: bosh
+  bosh_network: baby
+  bosh_vm_type: large
   ca_validity_period: 5y
   cert_validity_period: 1y
+  credhub_db_name: credhub
+  credhub_db_user: credhub
   dns_cache: false
+  external_db_ca: |
+    -----BEGIN CERTIFICATE-----
+    MIIEBjCCAu6gAwIBAgIJAMc0ZzaSUK51MA0GCSqGSIb3DQEBCwUAMIGPMQswCQYD
+    VQQGEwJVUzEQMA4GA1UEBwwHU2VhdHRsZTETMBEGA1UECAwKV2FzaGluZ3RvbjEi
+    MCAGA1UECgwZQW1hem9uIFdlYiBTZXJ2aWNlcywgSW5jLjETMBEGA1UECwwKQW1h
+    em9uIFJEUzEgMB4GA1UEAwwXQW1hem9uIFJEUyBSb290IDIwMTkgQ0EwHhcNMTkw
+    ODIyMTcwODUwWhcNMjQwODIyMTcwODUwWjCBjzELMAkGA1UEBhMCVVMxEDAOBgNV
+    BAcMB1NlYXR0bGUxEzARBgNVBAgMCldhc2hpbmd0b24xIjAgBgNVBAoMGUFtYXpv
+    biBXZWIgU2VydmljZXMsIEluYy4xEzARBgNVBAsMCkFtYXpvbiBSRFMxIDAeBgNV
+    BAMMF0FtYXpvbiBSRFMgUm9vdCAyMDE5IENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
+    AQ8AMIIBCgKCAQEArXnF/E6/Qh+ku3hQTSKPMhQQlCpoWvnIthzX6MK3p5a0eXKZ
+    oWIjYcNNG6UwJjp4fUXl6glp53Jobn+tWNX88dNH2n8DVbppSwScVE2LpuL+94vY
+    0EYE/XxN7svKea8YvlrqkUBKyxLxTjh+U/KrGOaHxz9v0l6ZNlDbuaZw3qIWdD/I
+    6aNbGeRUVtpM6P+bWIoxVl/caQylQS6CEYUk+CpVyJSkopwJlzXT07tMoDL5WgX9
+    O08KVgDNz9qP/IGtAcRduRcNioH3E9v981QO1zt/Gpb2f8NqAjUUCUZzOnij6mx9
+    McZ+9cWX88CRzR0vQODWuZscgI08NvM69Fn2SQIDAQABo2MwYTAOBgNVHQ8BAf8E
+    BAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUc19g2LzLA5j0Kxc0LjZa
+    pmD/vB8wHwYDVR0jBBgwFoAUc19g2LzLA5j0Kxc0LjZapmD/vB8wDQYJKoZIhvcN
+    AQELBQADggEBAHAG7WTmyjzPRIM85rVj+fWHsLIvqpw6DObIjMWokpliCeMINZFV
+    ynfgBKsf1ExwbvJNzYFXW6dihnguDG9VMPpi2up/ctQTN8tm9nDKOy08uNZoofMc
+    NUZxKCEkVKZv+IL4oHoeayt8egtv3ujJM6V14AstMQ6SwvwvA93EP/Ug2e4WAXHu
+    cbI1NAbUgVDqp+DRdfvZkgYKryjTWd/0+1fS8X1bBZVWzl7eirNVnHbSH2ZDpNuY
+    0SBd8dj5F6ld3t58ydZbrTHze7JJOd8ijySAp4/kiu9UfZWuTPABzDa/DSdz9Dk/
+    zPW4CXXvhLmE02TA9/HeCw3KEHIwicNuEfw=
+    -----END CERTIFICATE-----
+  external_db_host: baby-bosh-db-instance.cmziohdu4x1g.us-west-2.rds.amazonaws.com
   ntp:
   - 169.254.169.123
   remove_dev_tools: true
@@ -781,7 +786,9 @@ params:
   s3_blobstore_bucket: s3-dev-bosh-buildpacks
   s3_blobstore_region: us-west-2
   session_timeout: 1
-  static_ip: 10.4.16.4
+  static_ip: 10.4.63.4
+  uaa_db_name: uaa
+  uaa_db_user: uaa
 releases:
 - name: bosh
   sha1: 1eeb5067d342909b68cf5a38783a3421c2f53f55

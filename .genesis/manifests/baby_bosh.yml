@@ -1,14 +1,16 @@
+azs:
+- cloud_properties:
+    availability_zone: us-west-2a
+  name: z1
+- cloud_properties:
+    availability_zone: us-west-2b
+  name: z2
+- cloud_properties:
+    availability_zone: us-west-2c
+  name: z3
 bosh-variables:
   access_key_id: REDACTED
   admin_password: REDACTED
-  az: us-west-2a
-  blobstore_agent_password: REDACTED
-  blobstore_ca:
-    certificate: REDACTED
-  blobstore_director_password: REDACTED
-  blobstore_server_tls:
-    certificate: REDACTED
-    private_key: REDACTED
   credhub_admin_client_secret: REDACTED
   credhub_cli_user_password: REDACTED
   credhub_encryption_password: REDACTED
@@ -16,31 +18,20 @@ bosh-variables:
     ca: REDACTED
     certificate: REDACTED
     private_key: REDACTED
-  default_key_name: vcap@uswest2demo
+  default_key_name: vcap@baby_bosh
   default_security_groups:
   - sg-0b765bce78ba5949d
-  director_name: uswest2demo-bosh
+  director_name: baby_bosh-bosh
   director_ssl:
     ca: REDACTED
     certificate: REDACTED
     private_key: REDACTED
-  disk_size: 32768
   hm_password: REDACTED
   http_proxy: ""
   https_proxy: ""
-  internal_cidr: 10.4.1.0/24
-  internal_dns:
-  - 1.1.1.1
-  - 8.8.4.4
-  internal_gw: 10.4.1.1
-  internal_ip: 10.4.1.4
+  internal_ip: 10.4.63.4
   internal_ntp:
   - 169.254.169.123
-  mbus_bootstrap_password: REDACTED
-  mbus_bootstrap_ssl:
-    ca: REDACTED
-    certificate: REDACTED
-    private_key: REDACTED
   nats_ca:
     certificate: REDACTED
     private_key: REDACTED
@@ -57,11 +48,13 @@ bosh-variables:
     private_key: REDACTED
   no_proxy: ""
   postgres_password: REDACTED
-  private_key: REDACTED
   region: us-west-2
   registry_password: REDACTED
+  s3-access-key-id: REDACTED
+  s3-bucket-name: s3-dev-bosh-buildpacks
+  s3-region: us-west-2
+  s3-secret-access-key: REDACTED
   secret_access_key: REDACTED
-  subnet_id: subnet-0f56fcba8b1ba95b3
   trusted_ca_cert: ""
   uaa_admin_client_secret: REDACTED
   uaa_clients_director_to_credhub: REDACTED
@@ -76,73 +69,72 @@ bosh-variables:
     ca: REDACTED
     certificate: REDACTED
     private_key: REDACTED
-cloud_provider:
-  cert: ((mbus_bootstrap_ssl))
-  mbus: https://mbus:((mbus_bootstrap_password))@((internal_ip)):6868
-  properties:
-    agent:
-      mbus: https://mbus:((mbus_bootstrap_password))@0.0.0.0:6868
-    aws:
-      access_key_id: ((access_key_id))
-      default_key_name: ((default_key_name))
-      default_security_groups: ((default_security_groups))
-      region: ((region))
-      secret_access_key: ((secret_access_key))
-    blobstore:
-      path: /var/vcap/micro_bosh/data/cache
-      provider: local
-    env:
-      http_proxy: ((http_proxy))
-      https_proxy: ((https_proxy))
-      no_proxy: ((no_proxy))
-  ssh_tunnel:
-    host: ((internal_ip))
-    port: 22
-    private_key: ((private_key))
-    user: vcap
-  template:
-    name: aws_cpi
-    release: bosh-aws-cpi
-disk_pools:
+compilation:
+  az: z1
+  network: default
+  reuse_compilation_vms: true
+  vm_type: large
+  workers: 5
+disk_types:
 - cloud_properties:
     type: gp2
-  disk_size: ((disk_size))
-  name: disks
+  disk_size: 3000
+  name: default
+- cloud_properties:
+    type: gp2
+  disk_size: 50000
+  name: large
+- cloud_properties:
+    type: gp2
+  disk_size: 50000
+  name: bosh
+- cloud_properties:
+    type: gp3
+  disk_size: 10240
+  name: concourse
 exodus:
   admin_password: REDACTED
   admin_username: admin
-  bosh: null
+  blacksmith_password: REDACTED
+  blacksmith_user: blacksmith
+  bosh: uswest2demo
   bosh-deployment-date: 2020-Nov-14 00:56:33 UTC
   bosh-deployment-version: f518c39
   ca_cert: REDACTED
   credhub_ca_cert: ((credhub_tls.certificate))
   credhub_password: ((credhub_cli_user_password))
-  credhub_url: https://10.4.1.4:8844
+  credhub_url: https://10.4.63.4:8844
   credhub_username: credhub_cli_user
-  dated: 2022-07-18 08:15:59 +0000
+  dated: 2022-07-20 18:59:05 +0000
   deployer: ubuntu
-  features: aws,proto,bosh-dns-healthcheck,rds-ssl,rds-ssl-proto
+  features: aws,s3-blobstore,bosh-cloud-properties,blacksmith-integration
   is_director: true
   kit_is_dev: false
   kit_name: bosh
   kit_version: 2.2.4
   netop_sshkey: REDACTED
   sysop_password: REDACTED
-  url: https://10.4.1.4:25555
-  use_create_env: true
-  vault_base: /secret/uswest2demo/bosh
+  url: https://10.4.63.4:25555
+  use_create_env: false
+  vault_base: /secret/baby_bosh/bosh
   version: 2.8.5
 genesis:
+  bosh_env: uswest2demo
   ci_mount: /secret/ci/
-  env: uswest2demo
+  env: baby_bosh
   exodus_mount: /secret/exodus/
-  exodus_path: uswest2demo/bosh
+  exodus_path: baby_bosh/bosh
   min_version: 2.7.8
   secrets_mount: /secret/
-  secrets_path: uswest2demo/bosh
+  secrets_path: baby_bosh/bosh
 instance_groups:
 - azs:
   - z1
+  cloud_properties:
+    ephemeral_disk:
+      size: 50000
+      type: gp2
+    instance_type: t3.medium
   instances: 1
   jobs:
   - name: bpm
@@ -150,8 +142,6 @@ instance_groups:
   - name: nats
     release: bosh
   - name: postgres-10
-    release: bosh
-  - name: blobstore
     release: bosh
   - name: director
     release: bosh
@@ -180,6 +170,12 @@ instance_groups:
             override: true
             scope: ""
             secret: ((admin_password))
+          blacksmith:
+            authorities: bosh.teams.blacksmith.admin,bosh.stemcells.upload,bosh.releases.upload
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: REDACTED
           bosh_cli:
             access-token-validity: 120
             authorities: uaa.none
@@ -266,6 +262,12 @@ instance_groups:
             - credhub.write
             name: credhub_cli_user
             password: ((credhub_cli_user_password))
+          - groups:
+            - bosh.teams.blacksmith.admin
+            - bosh.stemcells.upload
+            - bosh.releases.upload
+            name: blacksmith
+            password: REDACTED
         sslCertificate: ((uaa_ssl.certificate))
         sslPrivateKey: ((uaa_ssl.private_key))
         url: https://((internal_ip)):8443
@@ -351,34 +353,6 @@ instance_groups:
     release: bosh
   - name: aws_cpi
     release: bosh-aws-cpi
-  - name: ca_certs
-    properties:
-      certs: |
-        -----BEGIN CERTIFICATE-----
-        MIIEBjCCAu6gAwIBAgIJAMc0ZzaSUK51MA0GCSqGSIb3DQEBCwUAMIGPMQswCQYD
-        VQQGEwJVUzEQMA4GA1UEBwwHU2VhdHRsZTETMBEGA1UECAwKV2FzaGluZ3RvbjEi
-        MCAGA1UECgwZQW1hem9uIFdlYiBTZXJ2aWNlcywgSW5jLjETMBEGA1UECwwKQW1h
-        em9uIFJEUzEgMB4GA1UEAwwXQW1hem9uIFJEUyBSb290IDIwMTkgQ0EwHhcNMTkw
-        ODIyMTcwODUwWhcNMjQwODIyMTcwODUwWjCBjzELMAkGA1UEBhMCVVMxEDAOBgNV
-        BAcMB1NlYXR0bGUxEzARBgNVBAgMCldhc2hpbmd0b24xIjAgBgNVBAoMGUFtYXpv
-        biBXZWIgU2VydmljZXMsIEluYy4xEzARBgNVBAsMCkFtYXpvbiBSRFMxIDAeBgNV
-        BAMMF0FtYXpvbiBSRFMgUm9vdCAyMDE5IENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
-        AQ8AMIIBCgKCAQEArXnF/E6/Qh+ku3hQTSKPMhQQlCpoWvnIthzX6MK3p5a0eXKZ
-        oWIjYcNNG6UwJjp4fUXl6glp53Jobn+tWNX88dNH2n8DVbppSwScVE2LpuL+94vY
-        0EYE/XxN7svKea8YvlrqkUBKyxLxTjh+U/KrGOaHxz9v0l6ZNlDbuaZw3qIWdD/I
-        6aNbGeRUVtpM6P+bWIoxVl/caQylQS6CEYUk+CpVyJSkopwJlzXT07tMoDL5WgX9
-        O08KVgDNz9qP/IGtAcRduRcNioH3E9v981QO1zt/Gpb2f8NqAjUUCUZzOnij6mx9
-        McZ+9cWX88CRzR0vQODWuZscgI08NvM69Fn2SQIDAQABo2MwYTAOBgNVHQ8BAf8E
-        BAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUc19g2LzLA5j0Kxc0LjZa
-        pmD/vB8wHwYDVR0jBBgwFoAUc19g2LzLA5j0Kxc0LjZapmD/vB8wDQYJKoZIhvcN
-        AQELBQADggEBAHAG7WTmyjzPRIM85rVj+fWHsLIvqpw6DObIjMWokpliCeMINZFV
-        ynfgBKsf1ExwbvJNzYFXW6dihnguDG9VMPpi2up/ctQTN8tm9nDKOy08uNZoofMc
-        NUZxKCEkVKZv+IL4oHoeayt8egtv3ujJM6V14AstMQ6SwvwvA93EP/Ug2e4WAXHu
-        cbI1NAbUgVDqp+DRdfvZkgYKryjTWd/0+1fS8X1bBZVWzl7eirNVnHbSH2ZDpNuY
-        0SBd8dj5F6ld3t58ydZbrTHze7JJOd8ijySAp4/kiu9UfZWuTPABzDa/DSdz9Dk/
-        zPW4CXXvhLmE02TA9/HeCw3KEHIwicNuEfw=
-        -----END CERTIFICATE-----
-    release: os-conf
   - name: user_add
     properties:
       persistent_homes: true
@@ -390,23 +364,21 @@ instance_groups:
     release: os-conf
   name: bosh
   networks:
-  - name: default
+  - name: baby
     static_ips:
     - ((internal_ip))
-  persistent_disk_pool: disks
+  persistent_disk_type: bosh
   properties:
     agent:
       env:
         bosh:
           blobstores:
           - options:
-              endpoint: https://((internal_ip)):25250
-              password: ((blobstore_agent_password))
-              tls:
-                cert:
-                  ca: ((blobstore_ca.certificate))
-              user: blobstore-user
-            provider: dav
+              access_key_id: ((s3-access-key-id))
+              bucket_name: ((s3-bucket-name))
+              region: ((s3-region))
+              secret_access_key: ((s3-secret-access-key))
+            provider: s3
           ntp: ((internal_ntp))
       mbus: nats://natsuser:((nats_password))@((internal_ip)):4222
     aws:
@@ -417,20 +389,11 @@ instance_groups:
       region: ((region))
       secret_access_key: ((secret_access_key))
     blobstore:
-      address: ((internal_ip))
-      agent:
-        password: ((blobstore_agent_password))
-        user: blobstore-user
-      director:
-        password: ((blobstore_director_password))
-        user: director-user
-      port: 25250
-      provider: dav
-      tls:
-        cert:
-          ca: ((blobstore_ca.certificate))
-          certificate: ((blobstore_server_tls.certificate))
-          private_key: ((blobstore_server_tls.private_key))
+      access_key_id: ((s3-access-key-id))
+      bucket_name: ((s3-bucket-name))
+      provider: s3
+      s3_region: ((s3-region))
+      secret_access_key: ((s3-secret-access-key))
     director:
       address: 127.0.0.1
       config_server:
@@ -465,9 +428,7 @@ instance_groups:
       ssl:
         cert: ((director_ssl.certificate))
         key: ((director_ssl.private_key))
-      trusted_certs: "# Common Name: Amazon RDS Root 2019 CA Valid To: August 22,
-        2024 \n-----BEGIN CERTIFICATE-----\nMIIEBjCCAu6gAwIBAgIJAMc0ZzaSUK51MA0GCSqGSIb3DQEBCwUAMIGPMQswCQYD\nVQQGEwJVUzEQMA4GA1UEBwwHU2VhdHRsZTETMBEGA1UECAwKV2FzaGluZ3RvbjEi\nMCAGA1UECgwZQW1hem9uIFdlYiBTZXJ2aWNlcywgSW5jLjETMBEGA1UECwwKQW1h\nem9uIFJEUzEgMB4GA1UEAwwXQW1hem9uIFJEUyBSb290IDIwMTkgQ0EwHhcNMTkw\nODIyMTcwODUwWhcNMjQwODIyMTcwODUwWjCBjzELMAkGA1UEBhMCVVMxEDAOBgNV\nBAcMB1NlYXR0bGUxEzARBgNVBAgMCldhc2hpbmd0b24xIjAgBgNVBAoMGUFtYXpv\nbiBXZWIgU2VydmljZXMsIEluYy4xEzARBgNVBAsMCkFtYXpvbiBSRFMxIDAeBgNV\nBAMMF0FtYXpvbiBSRFMgUm9vdCAyMDE5IENBMIIBIjANBgkqhkiG9w0BAQEFAAOC\nAQ8AMIIBCgKCAQEArXnF/E6/Qh+ku3hQTSKPMhQQlCpoWvnIthzX6MK3p5a0eXKZ\noWIjYcNNG6UwJjp4fUXl6glp53Jobn+tWNX88dNH2n8DVbppSwScVE2LpuL+94vY\n0EYE/XxN7svKea8YvlrqkUBKyxLxTjh+U/KrGOaHxz9v0l6ZNlDbuaZw3qIWdD/I\n6aNbGeRUVtpM6P+bWIoxVl/caQylQS6CEYUk+CpVyJSkopwJlzXT07tMoDL5WgX9\nO08KVgDNz9qP/IGtAcRduRcNioH3E9v981QO1zt/Gpb2f8NqAjUUCUZzOnij6mx9\nMcZ+9cWX88CRzR0vQODWuZscgI08NvM69Fn2SQIDAQABo2MwYTAOBgNVHQ8BAf8E\nBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUc19g2LzLA5j0Kxc0LjZa\npmD/vB8wHwYDVR0jBBgwFoAUc19g2LzLA5j0Kxc0LjZapmD/vB8wDQYJKoZIhvcN\nAQELBQADggEBAHAG7WTmyjzPRIM85rVj+fWHsLIvqpw6DObIjMWokpliCeMINZFV\nynfgBKsf1ExwbvJNzYFXW6dihnguDG9VMPpi2up/ctQTN8tm9nDKOy08uNZoofMc\nNUZxKCEkVKZv+IL4oHoeayt8egtv3ujJM6V14AstMQ6SwvwvA93EP/Ug2e4WAXHu\ncbI1NAbUgVDqp+DRdfvZkgYKryjTWd/0+1fS8X1bBZVWzl7eirNVnHbSH2ZDpNuY\n0SBd8dj5F6ld3t58ydZbrTHze7JJOd8ijySAp4/kiu9UfZWuTPABzDa/DSdz9Dk/\nzPW4CXXvhLmE02TA9/HeCw3KEHIwicNuEfw=\n-----END
-        CERTIFICATE-----\n"
+      trusted_certs: ((trusted_ca_cert))
       user_management:
         provider: uaa
         uaa:
@@ -534,69 +495,254 @@ instance_groups:
       password: ((registry_password))
       port: 25777
       username: registry
-  resource_pool: vms
+  stemcell: default
+  vm_type: bosh
 kit:
   features:
   - aws
-  - proto
-  - bosh-dns-healthcheck
-  - rds-ssl
-  - rds-ssl-proto
+  - s3-blobstore
+  - bosh-cloud-properties
+  - blacksmith-integration
   name: bosh
   version: 2.2.4
 meta:
-  dns:
-  - 8.8.8.8
-  - 8.8.4.4
-  vault: /secret/uswest2demo/bosh
-name: uswest2demo-bosh
+  vault: /secret/baby_bosh/bosh
+name: baby_bosh-bosh
 networks:
 - name: default
   subnets:
-  - cloud_properties:
-      security_groups:
-      - sg-0b765bce78ba5949d
-      subnet: ((subnet_id))
-    dns: ((internal_dns))
-    gateway: ((internal_gw))
-    range: ((internal_cidr))
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-0f56fcba8b1ba95b3
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.1.1
+    range: 10.4.1.0/24
+    reserved:
+    - 10.4.1.0-10.4.1.5
     static:
-    - ((internal_ip))
+    - 10.4.1.6-10.4.1.16
+  - azs:
+    - z2
+    cloud_properties:
+      subnet: subnet-04066d0a30fd1c020
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.2.1
+    range: 10.4.2.0/24
+    reserved:
+    - 10.4.2.0-10.4.2.5
+    static:
+    - 10.4.2.6-10.4.2.16
+  - azs:
+    - z3
+    cloud_properties:
+      subnet: subnet-0f2b10a0d103f3c83
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.3.1
+    range: 10.4.3.0/24
+    reserved:
+    - 10.4.3.0-10.4.3.5
+    static:
+    - 10.4.3.6-10.4.3.16
+  type: manual
+- name: concourse
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-0f56fcba8b1ba95b3
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.1.1
+    range: 10.4.1.0/24
+    reserved:
+    - 10.4.1.0-10.4.1.99
+    static:
+    - 10.4.1.100-10.4.1.106
+  - azs:
+    - z2
+    cloud_properties:
+      subnet: subnet-04066d0a30fd1c020
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.2.1
+    range: 10.4.2.0/24
+    reserved:
+    - 10.4.2.0-10.4.2.99
+    static:
+    - 10.4.2.100-10.4.2.106
+  - azs:
+    - z3
+    cloud_properties:
+      subnet: subnet-0f2b10a0d103f3c83
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.3.1
+    range: 10.4.3.0/24
+    reserved:
+    - 10.4.3.0-10.4.3.99
+    static:
+    - 10.4.3.100-10.4.3.106
+  type: manual
+- name: concourse-full
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-0f56fcba8b1ba95b3
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.1.1
+    range: 10.4.1.0/24
+    reserved:
+    - 10.4.1.0-10.4.1.99
+    static:
+    - 10.4.1.150-10.4.1.156
+  - azs:
+    - z2
+    cloud_properties:
+      subnet: subnet-04066d0a30fd1c020
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.2.1
+    range: 10.4.2.0/24
+    reserved:
+    - 10.4.2.0-10.4.2.99
+    static:
+    - 10.4.2.150-10.4.2.156
+  - azs:
+    - z3
+    cloud_properties:
+      subnet: subnet-0f2b10a0d103f3c83
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.3.1
+    range: 10.4.3.0/24
+    reserved:
+    - 10.4.3.0-10.4.3.99
+    static:
+    - 10.4.3.150-10.4.3.156
+  type: manual
+- name: dev
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-0ea631cc3ad19e04f
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.16.1
+    range: 10.4.16.0/24
+    reserved:
+    - 10.4.16.0-10.4.16.3
+    static:
+    - 10.4.16.4-10.4.16.16
+  - azs:
+    - z2
+    cloud_properties:
+      subnet: subnet-09a05edb82702379b
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.17.1
+    range: 10.4.17.0/24
+    reserved:
+    - 10.4.17.0-10.4.17.3
+    static:
+    - 10.4.17.4-10.4.17.16
+  - azs:
+    - z3
+    cloud_properties:
+      subnet: subnet-0dd034854c197dc41
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.18.1
+    range: 10.4.18.0/24
+    reserved:
+    - 10.4.18.0-10.4.18.3
+    static:
+    - 10.4.18.4-10.4.18.16
+  type: manual
+- name: baby
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-064b78e587e3b8bf5
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.63.1
+    range: 10.4.63.0/24
+    reserved:
+    - 10.4.63.0-10.4.63.3
+    static:
+    - 10.4.63.4-10.4.63.16
   type: manual
 params:
   aws_default_sgs:
   - sg-0b765bce78ba5949d
-  aws_disk_type: gp2
   aws_ebs_encryption: false
-  aws_instance_type: t3.small
-  aws_key_name: vcap@uswest2demo
+  aws_key_name: vcap@baby_bosh
   aws_region: us-west-2
-  aws_security_groups:
-  - sg-0b765bce78ba5949d
-  aws_subnet_id: subnet-0f56fcba8b1ba95b3
   bosh_disk_pool: bosh
   bosh_disk_type: large
   bosh_hostname: bosh
-  bosh_network: bosh
-  bosh_vm_type: large
+  bosh_network: baby
+  bosh_vm_type: bosh
   ca_validity_period: 5y
   cert_validity_period: 1y
-  default_gateway: 10.4.1.1
-  dns:
-  - 1.1.1.1
-  - 8.8.4.4
-  dns_cache: true
-  ephemeral_disk_size: 25000
+  dns_cache: false
+  external_db_ca: |
+    -----BEGIN CERTIFICATE-----
+    MIIEBzCCAu+gAwIBAgICUYkwDQYJKoZIhvcNAQELBQAwgY8xCzAJBgNVBAYTAlVT
+    MRAwDgYDVQQHDAdTZWF0dGxlMRMwEQYDVQQIDApXYXNoaW5ndG9uMSIwIAYDVQQK
+    DBlBbWF6b24gV2ViIFNlcnZpY2VzLCBJbmMuMRMwEQYDVQQLDApBbWF6b24gUkRT
+    MSAwHgYDVQQDDBdBbWF6b24gUkRTIFJvb3QgMjAxOSBDQTAeFw0xOTA5MTYxODIx
+    MTVaFw0yNDA4MjIxNzA4NTBaMIGUMQswCQYDVQQGEwJVUzETMBEGA1UECAwKV2Fz
+    aGluZ3RvbjEQMA4GA1UEBwwHU2VhdHRsZTEiMCAGA1UECgwZQW1hem9uIFdlYiBT
+    ZXJ2aWNlcywgSW5jLjETMBEGA1UECwwKQW1hem9uIFJEUzElMCMGA1UEAwwcQW1h
+    em9uIFJEUyB1cy13ZXN0LTIgMjAxOSBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEP
+    ADCCAQoCggEBANCEZBZyu6yJQFZBJmSUZfSZd3Ui2gitczMKC4FLr0QzkbxY+cLa
+    uVONIOrPt4Rwi+3h/UdnUg917xao3S53XDf1TDMFEYp4U8EFPXqCn/GXBIWlU86P
+    PvBN+gzw3nS+aco7WXb+woTouvFVkk8FGU7J532llW8o/9ydQyDIMtdIkKTuMfho
+    OiNHSaNc+QXQ32TgvM9A/6q7ksUoNXGCP8hDOkSZ/YOLiI5TcdLh/aWj00ziL5bj
+    pvytiMZkilnc9dLY9QhRNr0vGqL0xjmWdoEXz9/OwjmCihHqJq+20MJPsvFm7D6a
+    2NKybR9U+ddrjb8/iyLOjURUZnj5O+2+OPcCAwEAAaNmMGQwDgYDVR0PAQH/BAQD
+    AgEGMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFEBxMBdv81xuzqcK5TVu
+    pHj+Aor8MB8GA1UdIwQYMBaAFHNfYNi8ywOY9CsXNC42WqZg/7wfMA0GCSqGSIb3
+    DQEBCwUAA4IBAQBZkfiVqGoJjBI37aTlLOSjLcjI75L5wBrwO39q+B4cwcmpj58P
+    3sivv+jhYfAGEbQnGRzjuFoyPzWnZ1DesRExX+wrmHsLLQbF2kVjLZhEJMHF9eB7
+    GZlTPdTzHErcnuXkwA/OqyXMpj9aghcQFuhCNguEfnROY9sAoK2PTfnTz9NJHL+Q
+    UpDLEJEUfc0GZMVWYhahc0x38ZnSY2SKacIPECQrTI0KpqZv/P+ijCEcMD9xmYEb
+    jL4en+XKS1uJpw5fIU5Sj0MxhdGstH6S84iAE5J3GM3XHklGSFwwqPYvuTXvANH6
+    uboynxRgSae59jIlAK6Jrr6GWMwQRbgcaAlW
+    -----END CERTIFICATE-----
+  external_db_host: baby-bosh-db-instance.cmziohdu4x1g.us-west-2.rds.amazonaws.com
   ntp:
   - 169.254.169.123
-  persistent_disk_size: 32768
   remove_dev_tools: true
   resurrector_minimum_down_jobs: 5
   resurrector_percent_threshold: 0.2
   resurrector_time_threshold: 600
+  s3_blobstore_bucket: s3-dev-bosh-buildpacks
+  s3_blobstore_region: us-west-2
   session_timeout: 1
-  static_ip: 10.4.1.4
-  subnet_addr: 10.4.1.0/24
+  static_ip: 10.4.63.4
 releases:
 - name: bosh
   sha1: 1eeb5067d342909b68cf5a38783a3421c2f53f55
@@ -622,25 +768,44 @@ releases:
   sha1: 386293038ae3d00813eaa475b4acf63f8da226ef
   url: https://bosh.io/d/github.com/cloudfoundry/os-conf-release?v=22.1.2
   version: 22.1.2
-resource_pools:
+stemcells:
+- alias: default
+  os: ubuntu-bionic
+  version: latest
+update:
+  canaries: 1
+  canary_watch_time: 30000-600000
+  max_in_flight: 1
+  serial: true
+  update_watch_time: 30000-600000
+vm_types:
 - cloud_properties:
-    availability_zone: ((az))
+    ephemeral_disk:
+      size: 3000
+      type: gp2
+    instance_type: t2.small
+  name: default
+- cloud_properties:
+    ephemeral_disk:
+      size: 30000
+      type: gp2
+    instance_type: t3.large
+  name: large
+- cloud_properties:
     ephemeral_disk:
       size: 25000
       type: gp2
-    instance_type: t3.small
-  env:
-    bosh:
-      blobstores:
-      - options:
-          blobstore_path: /var/vcap/micro_bosh/data/cache
-        provider: local
-      mbus:
-        cert: ((mbus_bootstrap_ssl))
-      ntp: ((internal_ntp))
-      password: '*'
-  name: vms
-  network: default
-  stemcell:
-    sha1: cacf5a4e0e7431b94999487ecf94ce01a1c3e49e
-    url: https://storage.googleapis.com/bosh-aws-light-stemcells/1.41/light-bosh-stemcell-1.41-aws-xen-hvm-ubuntu-bionic-go_agent.tgz
+    instance_type: t3.medium
+  name: bosh
+- cloud_properties:
+    ephemeral_disk:
+      size: 10240
+      type: gp3
+    instance_type: t3.large
+  name: concourse
+- cloud_properties:
+    ephemeral_disk:
+      size: 65536
+      type: gp3
+    instance_type: t3.medium
+  name: concourse-worker
