@@ -379,6 +379,17 @@ networks:
     cloud_properties: {subnet: subnet-0dd034854c197dc41}   ### ADDED !!!  Subnet snw-dev-infra-0
     reserved: [10.4.18.0-10.4.18.3]                        ### ADDED !!!  Reserved by AWS
 
+- name: baby                                                ### ADDED !!!
+  type: manual                                             ### ADDED !!!
+  subnets:                                                 ### ADDED !!!
+  - range: 10.4.63.0/24                                    ### ADDED !!!
+    gateway: 10.4.63.1                                     ### ADDED !!!
+    azs: ["z1"]                                            ### ADDED !!!
+    static: [10.4.63.4-10.4.63.6]                         ### ADDED !!!
+    dns: [1.1.1.1, 8.8.4.4]                                ### ADDED !!!
+    cloud_properties: {subnet: subnet-064b78e587e3b8bf5}   ### ADDED !!!  Subnet snw-dev-infra-0
+    reserved: [10.4.63.0-10.4.63.3]                        ### ADDED !!!  Reserved by AWS
+
 
 vm_extensions:
 - cloud_properties:
@@ -406,70 +417,70 @@ vm_types:
       encrypted: true
       size: 32768
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: api
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 16384
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: as-api
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 16384
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: as-broker
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 16384
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: as-collector
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 16384
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: as-engine
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 16384
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: as-operator
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 16384
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: as-scaler
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 16384
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: as-scheduler
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 8192
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: bbs
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 16384
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: blobstore
 - cloud_properties:
     ephemeral_disk:
@@ -483,49 +494,49 @@ vm_types:
       encrypted: true
       size: 8192
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.nano
   name: cc-worker
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 65536
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: compilation
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 65536
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: concourse-worker
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 16384
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: credhub
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 8192
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.nano
   name: default
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 262144
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.nano
   name: diego-cell
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 32768
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: diego-api
 - cloud_properties:
     ephemeral_disk:
@@ -539,21 +550,21 @@ vm_types:
       encrypted: true
       size: 8192
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: errand
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 8192
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: haproxy
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 32768
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: large
 - cloud_properties:
     ephemeral_disk:
@@ -567,42 +578,42 @@ vm_types:
       encrypted: true
       size: 16384
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: medium
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 10240
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.nano
   name: minimal
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 8192
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: nats
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 32768
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: postgres
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 8192
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: router
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 8192
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: scheduler
 - cloud_properties:
     ephemeral_disk:
@@ -623,35 +634,35 @@ vm_types:
       encrypted: true
       size: 24576
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: small-highmem
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 8192
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: syslogger
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 8192
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: tcp-router
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 81920
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.nano
   name: thunder-dome
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 16384
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: uaa
 - cloud_properties:
     ephemeral_disk:
