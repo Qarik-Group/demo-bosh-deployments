@@ -5,8 +5,8 @@ kit:
     - aws
     - proto
     - bosh-dns-healthcheck
-    - rds-ssl
-    - rds-ssl-proto
+#    - rds-ssl
+#    - rds-ssl-proto
       #    - cpi_t3_small
 genesis:
   env:            uswest2demo
