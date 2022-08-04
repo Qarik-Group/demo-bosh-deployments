@@ -25,6 +25,7 @@ params:
   dns:
     - 1.1.1.1
     - 8.8.4.4
+    - 8.8.8.8
 
   # BOSH on AWS needs to know what region to deploy to, and what
   # default security groups to apply to all VMs by default.
