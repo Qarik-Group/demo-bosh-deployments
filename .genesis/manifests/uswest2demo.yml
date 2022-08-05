@@ -120,8 +120,8 @@ exodus:
   credhub_password: ((credhub_cli_user_password))
   credhub_url: https://10.4.1.4:8844
   credhub_username: credhub_cli_user
-  dated: 2022-08-04 07:48:40 +0000
-  deployer: ubuntu
+  dated: 2022-08-04 08:16:16 +0000
+  deployer: unknown
   features: aws,proto,bosh-dns-healthcheck
   is_director: true
   kit_is_dev: false
@@ -132,7 +132,7 @@ exodus:
   url: https://10.4.1.4:25555
   use_create_env: true
   vault_base: /secret/uswest2demo/bosh
-  version: 2.8.5
+  version: 2.8.4
 genesis:
   ci_mount: /secret/ci/
   env: uswest2demo
