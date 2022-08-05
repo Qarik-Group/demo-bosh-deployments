@@ -32,7 +32,6 @@ bosh-variables:
   internal_dns:
   - 1.1.1.1
   - 8.8.4.4
-  - 8.8.8.8
   internal_gw: 10.4.1.1
   internal_ip: 10.4.1.4
   internal_ntp:
@@ -120,7 +119,7 @@ exodus:
   credhub_password: ((credhub_cli_user_password))
   credhub_url: https://10.4.1.4:8844
   credhub_username: credhub_cli_user
-  dated: 2022-08-05 13:18:21 +0000
+  dated: 2022-08-05 13:21:02 +0000
   deployer: ubuntu
   features: aws,proto,bosh-dns-healthcheck
   is_director: true
@@ -554,7 +553,6 @@ params:
   dns:
   - 1.1.1.1
   - 8.8.4.4
-  - 8.8.8.8
   dns_cache: true
   ephemeral_disk_size: 25000
   ntp:
