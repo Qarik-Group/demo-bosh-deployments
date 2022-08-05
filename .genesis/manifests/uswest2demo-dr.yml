@@ -32,7 +32,6 @@ bosh-variables:
   internal_dns:
   - 1.1.1.1
   - 8.8.4.4
-  - 8.8.8.8
   internal_gw: 10.4.1.1
   internal_ip: 10.4.1.5
   internal_ntp:
@@ -120,8 +119,8 @@ exodus:
   credhub_password: ((credhub_cli_user_password))
   credhub_url: https://10.4.1.5:8844
   credhub_username: credhub_cli_user
-  dated: 2022-08-05 12:50:20 +0000
-  deployer: ubuntu
+  dated: 2022-08-05 13:41:58 +0000
+  deployer: unknown
   features: aws,proto,bosh-dns-healthcheck
   is_director: true
   kit_is_dev: false
@@ -132,7 +131,7 @@ exodus:
   url: https://10.4.1.5:25555
   use_create_env: true
   vault_base: /secret/uswest2demo/dr/bosh
-  version: 2.8.5
+  version: 2.8.4
 genesis:
   ci_mount: /secret/ci/
   env: uswest2demo-dr
@@ -554,7 +553,6 @@ params:
   dns:
   - 1.1.1.1
   - 8.8.4.4
-  - 8.8.8.8
   dns_cache: true
   ephemeral_disk_size: 25000
   ntp:
