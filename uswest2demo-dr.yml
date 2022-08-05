@@ -1,0 +1,57 @@
+#kit:                                                                       ### Coomented out objects with 3 # (###) rely on genesis inheritance
+#  name:    bosh                                                            ### in this case all values are inherited from uswest2demo.yml
+#  version: 2.2.4                                                           ###
+#  features:                                                                ###
+#    - aws                                                                  ###
+#    - proto                                                                ###
+#    - bosh-dns-healthcheck                                                 ###
+#    - rds-ssl
+#    - rds-ssl-proto
+      #    - cpi_t3_small
+genesis:
+  env:            uswest2demo-dr
+  #  bosh_env:       --
+#  min_version:    2.7.8                                                    ###
+
+
+params:
+  # These properties definte the host-level networking for a proto-BOSH.
+  # Environmental BOSHes can depend on their parent BOSH cloud-config,
+  # but for proto- environments, we have to specify these.
+  #
+  static_ip:       10.4.1.5
+  aws_key_name:    vcap@uswest2demo                                         # Using uswest2demo key pair as a shortcut to avoid CPI 'create_vm' method responded with error: CmdError{"type":"Unknown","message":"The key pair 'vcap@uswest2demo-dr' does not exist","ok_to_retry":false}
+  #subnet_addr:     10.4.1.0/24                                             ###
+  #default_gateway: 10.4.1.1                                                ###
+  #dns:                                                                     ###
+  #  - 1.1.1.1                                                              ###
+  #  - 8.8.4.4                                                              ###
+  #  - 8.8.8.8                                                              ###
+
+  # BOSH on AWS needs to know what region to deploy to, and what
+  # default security groups to apply to all VMs by default.
+  #
+  # AWS credentials are stored in the Vault at
+  #   /secret/uswest2demo/bosh/aws
+  #
+  #aws_region: us-west-2                                                    ###
+  #aws_default_sgs:                                                         ###
+  #  - sg-0b765bce78ba5949d                                                 ###
+
+  # The following configuration is only necessary for proto-BOSH
+  # deployments, since environment BOSHes will derive their networking
+  # and VM/AMI configuration from their parent BOSH cloud-config.
+  #
+  #aws_subnet_id: subnet-0f56fcba8b1ba95b3                                  ###
+  #aws_security_groups:                                                     ###
+  #  - sg-0b765bce78ba5949d                                                 ###
+
+  # DNS Caching (for runtime config)
+  #dns_cache: true                                                          ###
+
+  #aws_instance_type: t3.small                                              ###
+
+  #bosh_network: dev
+  #bosh_vm_type: bosh
+  #bosh_disk_type: large                                                    ###
+  #bosh_disk_pool: bosh

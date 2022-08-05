@@ -1,0 +1,67 @@
+{
+    "director_id": "4be01dcc-3c42-4908-4387-dcfdc6b9cc20",
+    "installation_id": "eea705fb-de43-427a-6381-5ccf63358a78",
+    "current_vm_cid": "i-02e5d0cc4961d044a",
+    "current_stemcell_id": "a011bed4-a3d4-4725-6574-12c902ec33de",
+    "current_disk_id": "26d41a31-c2e2-4bd5-62d7-d60cc0d87f08",
+    "current_release_ids": [
+        "4a26d15b-f131-4db1-4c3f-cb0a8f045ecd",
+        "02f604f7-93fe-4434-7894-631716f5ff2a",
+        "755db9cd-3da1-4283-6f96-a2f7b1a6c0c8",
+        "78658cb1-d822-4d44-77f3-9616a2df39c0",
+        "a3e1c5d2-453b-4c33-6528-0ca48425535a",
+        "79fc47f2-4b0f-4421-462f-7224fa99dda1"
+    ],
+    "current_manifest_sha": "eda3c20539d378d83ab6bec2883a536272691422e3cb1b2f54218108aadb31551270b54277f6b201bf8359b6f0d0b95e6d1c75253a70bdaf04a33f68c6f2b1ea",
+    "disks": [
+        {
+            "id": "26d41a31-c2e2-4bd5-62d7-d60cc0d87f08",
+            "cid": "vol-022531957e0b961d8",
+            "size": 32768,
+            "cloud_properties": {
+                "type": "gp2"
+            }
+        }
+    ],
+    "stemcells": [
+        {
+            "id": "a011bed4-a3d4-4725-6574-12c902ec33de",
+            "name": "bosh-aws-xen-hvm-ubuntu-bionic-go_agent",
+            "version": "1.41",
+            "api_version": 3,
+            "cid": "ami-0e2c27494dbfe34c6 light"
+        }
+    ],
+    "releases": [
+        {
+            "id": "4a26d15b-f131-4db1-4c3f-cb0a8f045ecd",
+            "name": "bosh",
+            "version": "271.17.0"
+        },
+        {
+            "id": "02f604f7-93fe-4434-7894-631716f5ff2a",
+            "name": "bpm",
+            "version": "1.1.15"
+        },
+        {
+            "id": "755db9cd-3da1-4283-6f96-a2f7b1a6c0c8",
+            "name": "uaa",
+            "version": "75.12.0"
+        },
+        {
+            "id": "78658cb1-d822-4d44-77f3-9616a2df39c0",
+            "name": "credhub",
+            "version": "2.11.0"
+        },
+        {
+            "id": "a3e1c5d2-453b-4c33-6528-0ca48425535a",
+            "name": "bosh-aws-cpi",
+            "version": "91"
+        },
+        {
+            "id": "79fc47f2-4b0f-4421-462f-7224fa99dda1",
+            "name": "os-conf",
+            "version": "22.1.2"
+        }
+    ]
+}

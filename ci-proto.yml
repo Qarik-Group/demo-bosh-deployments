@@ -17,20 +17,16 @@ pipeline:
 
   boshes:
     uswest2demo:
-    dev:
-      alias:    dev
-      url:      https://10.4.16.4:25555
-      ca_cert:  (( vault "secret/dev/bosh/ssl/ca:certificate" ))
-      username: admin
-      password: (( vault "secret/dev/bosh/users/admin:password" ))
+    uswest2demo-dr:
+
 
     
   layouts:
     default: |+
       auto *uswest2demo
-      uswest2demo -> dev
+      uswest2demo -> uswest2demo-dr
 
   groups:
     default:
     - uswest2demo
-    - dev
+    - uswest2demo-dr
