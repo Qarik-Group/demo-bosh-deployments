@@ -1,0 +1,23 @@
+---
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/blobstore/enable_signed_urls?
+  value: true
+
+- type: remove
+  path: /instance_groups/name=bosh/properties/agent/env/bosh/blobstores
+
+  #- type: replace
+  #path: /instance_groups/name=bosh/properties/blobstore/access_key_id
+  #value: not_used_but_required_by_some_cpis1
+
+  #- type: replace
+  #path: /instance_groups/name=bosh/properties/agent/env/bosh/blobstores/0/options/access_key_id
+  #value: not_used_but_required_by_some_cpis2  
+
+#- type: remove
+#path: /instance_groups/name=bosh/properties/agent/env/bosh/blobstores/0
+
+#- type: replace
+#path: /instance_groups/name=bosh/properties/director/enable_nats_delivered_templates?
+#value: true
