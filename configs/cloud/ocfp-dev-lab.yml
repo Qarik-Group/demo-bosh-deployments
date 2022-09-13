@@ -1,6 +1,6 @@
 azs:
-- name: z1
-  cloud_properties: {availability_zone: us-west-2a}
+  - name: z1
+    cloud_properties: {availability_zone: us-west-2a}
 
 ################################################################################
 # vm_types
@@ -84,9 +84,9 @@ compilation:
 # VM Extensions
 ################################################################################
 vm_extensions:
-#   - {"name": "cf-elb"}             # CW: Appear to be deprecated
-#   - {"name": "ssh-elb"}            # CW: Appear to be deprecated
-#   - {"name": "cf-load-balanced"}   # CW: Appear to be deprecated
+  # - {"name": "cf-elb"}             # CW: Appear to be deprecated
+  # - {"name": "ssh-elb"}            # CW: Appear to be deprecated
+  # - {"name": "cf-load-balanced"}   # CW: Appear to be deprecated
   - name: 100GB_ephemeral_disk
     cloud_properties:
       ephemeral_disk:
@@ -96,12 +96,12 @@ vm_extensions:
     cloud_properties:
       ephemeral_disk:
         size: 51200
-        type: gp3  
+        type: gp3
   - name: cf-router-network-properties
     cloud_properties:
-#      lb_target_groups:
-#        - codex-cf-alb-tg
-      elbs: 
+    #  lb_target_groups:
+    #    - codex-cf-alb-tg
+      elbs:
         - snw-dev-cf-elb
   - name: cf-tcp-router-network-properties
     cloud_properties:
@@ -110,54 +110,65 @@ vm_extensions:
 
   - name: diego-ssh-proxy-network-properties
 
+################################################################################
+# Networks
+################################################################################
 networks:
-- name: default
-  type: manual
-  subnets:                                                 ### ADDED !!!
-  - range: 10.4.69.0/24                                    ### ADDED !!!
-    gateway: 10.4.69.1                                     ### ADDED !!!
-    azs: ["z1"]                                            ### ADDED !!!
-    static: [10.4.69.6-10.4.69.16]                         ### ADDED !!!
-    dns: [1.1.1.1, 8.8.4.4]                                ### ADDED !!!
-    cloud_properties: {subnet: subnet-0dcf8272f03fead6d} # subnet-064b78e587e3b8bf5}   ### ADDED !!!  Subnet snw-dev-infra-0
-    reserved: [10.4.69.0-10.4.69.5]                        ### ADDED !!!  Reserved by AWS
-    #- name: concourse-ips                                                                     
-    # type: manual                                                                      
-    #subnets:                                                                          
-    # - range: 10.4.68.0/24                                                             
-    #gateway: 10.4.68.1                                                              
-    #azs: ["z1"]                                                                     
-    #static: [10.4.68.6-10.4.68.16]                                                  
-    #dns: [1.1.1.1, 8.8.4.4]                                                         
-    #cloud_properties: {subnet: subnet-004e38051f36dae09} #snw-dev-cf-edge-internal-0
-    #reserved: [10.4.68.0-10.4.68.5] 
-- name: cf-edge                                                                     
-  type: manual                                                                      
-  subnets:                                                                          
-  - range: 10.4.35.0/25                                                             
-    gateway: 10.4.35.1                                                              
-    azs: ["z1"]                                                                     
-    static: [10.4.35.6-10.4.35.16]                                                  
-    dns: [1.1.1.1, 8.8.4.4]                                                         
-    cloud_properties: {subnet: subnet-07d4502687a40fe9c}  #cf staging edge 1
-    reserved: [10.4.35.0-10.4.35.127]  
-- name: cf-runtime                                                                     
-  type: manual                                                                      
-  subnets:                                                                          
-  - range: 10.4.65.0/24                                                             
-    gateway: 10.4.65.1                                                              
-    azs: ["z1"]                                                                     
-    static: [10.4.65.6-10.4.65.16]                                                  
-    dns: [1.1.1.1, 8.8.4.4]                                                         
-    cloud_properties: {subnet: subnet-017e62bca32e491ea} #snw-dev-cf-edge-internal-0
-    reserved: [10.4.65.0-10.4.65.5]
-- name: cf-core                                                                  
-  type: manual                                                                      
-  subnets:                                                                          
-  - range: 10.4.66.0/24                                                             
-    gateway: 10.4.66.1                                                              
-    azs: ["z1"]                                                                     
-    static: [10.4.66.6-10.4.66.16]                                                  
-    dns: [1.1.1.1, 8.8.4.4]                                                         
-    cloud_properties: {subnet: subnet-06001ccd9bca8ac63} #snw-dev-cf-edge-internal-0
-    reserved: [10.4.66.0-10.4.66.5]   
+  - name: default
+    type: manual
+    subnets:
+      - range: 10.4.69.0/24
+        gateway: 10.4.69.1
+        azs: [ z1 ]
+        static: [ 10.4.69.6 - 10.4.69.16 ]
+        dns: [ 1.1.1.1, 8.8.4.4 ]
+        cloud_properties: { subnet: subnet-0dcf8272f03fead6d } #snw-dev-infra-0
+        reserved:
+          - 10.4.69.0 - 10.4.69.5
+          - 10.4.69.6 - 10.4.69.127
+  - name: cf-edge
+    type: manual
+    subnets:
+      - range: 10.4.35.0/25
+        gateway: 10.4.35.1
+        azs: [ z1 ]
+        static: [ 10.4.35.64 - 10.4.35.74 ]
+        dns: [ 1.1.1.1, 8.8.4.4 ]
+        cloud_properties: { subnet: subnet-07d4502687a40fe9c }  #cf staging edge 1
+        reserved:
+          - 10.4.35.0 - 10.4.35.5
+          - 10.4.35.6 - 10.4.35.63
+  - name: cf-runtime
+    type: manual
+    subnets:
+      - range: 10.4.65.0/24
+        gateway: 10.4.65.1
+        azs: [ z1 ]
+        static: [ 10.4.65.128 - 10.4.65.138 ]
+        dns: [ 1.1.1.1, 8.8.4.4 ]
+        cloud_properties: { subnet: subnet-017e62bca32e491ea } #snw-dev-cf-edge-internal-0
+        reserved:
+          - 10.4.65.0 - 10.4.65.5
+          - 10.4.65.6 - 10.4.65.127
+  - name: cf-core
+    type: manual
+    subnets:
+      - range: 10.4.66.0/24
+        gateway: 10.4.66.1
+        azs: [ z1 ]
+        static: [ 10.4.66.128 - 10.4.66.138 ]
+        dns: [ 1.1.1.1, 8.8.4.4 ]
+        cloud_properties: { subnet: subnet-06001ccd9bca8ac63 } #snw-dev-cf-edge-internal-0
+        reserved:
+          - 10.4.66.0 - 10.4.66.5
+          - 10.4.66.6 - 10.4.66.127
+  # - name: concourse-ips
+  #   type: manual
+  #   subnets:
+  #     - range: 10.4.68.0/24
+  #       gateway: 10.4.68.1
+  #       azs: [ z1 ]
+  #       static: [ 10.4.68.6 - 10.4.68.16 ]
+  #       dns: [ 1.1.1.1, 8.8.4.4 ]
+  #       cloud_properties: { subnet: subnet-004e38051f36dae09 } #snw-dev-cf-edge-internal-0
+  #       reserved: [ 10.4.68.0 - 10.4.68.5 ]
