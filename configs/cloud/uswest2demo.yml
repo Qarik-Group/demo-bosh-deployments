@@ -196,7 +196,7 @@ networks:
       - range: 10.4.62.0/25
         gateway: 10.4.62.1
         azs: ["z1"]
-        static: [10.4.62.4-10.4.62.16]
+        static: [10.4.62.64-10.4.62.76]
         dns: [1.1.1.1, 8.8.4.4]
         cloud_properties: {subnet: subnet-0bdaf27eb328f7e4d} #snw-dev-cf-edge-internal-0
         reserved:
@@ -208,7 +208,7 @@ networks:
       - range: 10.4.62.128/25
         gateway: 10.4.62.129
         azs: ["z2"]
-        static: [10.4.62.132-10.4.17.144]
+        static: [10.4.62.192-10.4.17.204]
         dns: [1.1.1.1, 8.8.4.4]
         cloud_properties: {subnet: subnet-048560ab22b7c345f} #snw-dev-cf-edge-internal-1
         reserved:
