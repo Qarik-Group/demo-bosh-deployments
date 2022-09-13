@@ -161,26 +161,37 @@ networks:
     subnets:
       - range: 10.4.29.0/28
         gateway: 10.4.29.1
-        azs: ["z1"]
-        static: [10.4.29.4-10.4.29.14]
+        azs: [ z1 ]
+        static:
+          - 10.4.29.4 - 10.4.29.6
+          # - 10.4.29.7 - 10.4.29.9   # leave this to 'ocfp-dev' director
+          # - 10.4.29.10 - 10.4.29.11 # leave this to 'uswest2demo' director
+          # - 10.4.29.12 - 10.4.29.14 # leave this to 'ocfp-dev-prod' director
         dns: [1.1.1.1, 8.8.4.4]
         cloud_properties: {subnet: subnet-03720ac266d128f29} #snw-dev-cf-db-0
         reserved: [10.4.29.0-10.4.29.3]
       - range: 10.4.29.16/28
         gateway: 10.4.29.17
-        azs: ["z2"]
-        static: [10.4.29.20-10.4.29.30]
+        azs: [ z2 ]
+        static:
+          - 10.4.29.20 - 10.4.29.22
+          # - 10.4.29.23 - 10.4.29.25 # leave this to 'ocfp-dev' director
+          # - 10.4.29.26 - 10.4.29.27 # leave this to 'uswest2demo' director
+          # - 10.4.29.28 - 10.4.29.30 # leave this to 'ocfp-dev-prod' director
         dns: [1.1.1.1, 8.8.4.4]
         cloud_properties: {subnet: subnet-015b5284fb46c07e6} #snw-dev-cf-db-1
         reserved: [10.4.29.16-10.4.29.19]
       - range: 10.4.29.32/28
         gateway: 10.4.29.33
-        azs: ["z3"]
-        static: [10.4.29.36-10.4.29.46]
+        azs: [ z3 ]
+        static:
+          - 10.4.29.36 - 10.4.29.38
+          # - 10.4.29.39 - 10.4.29.41 # leave this to 'ocfp-dev' director
+          # - 10.4.29.42 - 10.4.29.43 # leave this to 'uswest2demo' director
+          # - 10.4.29.44 - 10.4.29.46 # leave this to 'ocfp-dev-prod' director
         dns: [1.1.1.1, 8.8.4.4]
         cloud_properties: {subnet: subnet-05dcf16f08f546160} #snw-dev-cf-db-2
         reserved: [10.4.29.32-10.4.29.35]
-
 
   - name: cf-edge
     type: manual
@@ -193,7 +204,10 @@ networks:
         cloud_properties: {subnet: subnet-0bdaf27eb328f7e4d} #snw-dev-cf-edge-internal-0
         reserved:
           - 10.4.62.0-10.4.62.3
-          - 10.4.62.64 - 10.4.62.126 # leave this to 'ocfp-dev' director
+          # - 10.4.62.4 - 10.4.62.31 # leave this to 'dev' director
+          - 10.4.62.32 - 10.4.62.63 # leave this to 'ocfp-dev' director
+          - 10.4.62.64 - 10.4.62.95 # leave this to 'uswest2demo' director
+          - 10.4.62.96 - 10.4.62.126 # leave this to 'ocfp-dev-prod' director
       - range: 10.4.62.128/25
         gateway: 10.4.62.129
         azs: ["z2"]
@@ -202,7 +216,10 @@ networks:
         cloud_properties: {subnet: subnet-048560ab22b7c345f} #snw-dev-cf-edge-internal-1
         reserved:
           - 10.4.62.128-10.4.62.131
-          - 10.4.62.192 - 10.4.62.254 # leave this to 'ocfp-dev' director
+          # - 10.4.62.132 - 10.4.62.159 # leave this to 'dev' director
+          - 10.4.62.160 - 10.4.62.191 # leave this to 'ocfp-dev' director
+          - 10.4.62.192 - 10.4.62.223 # leave this to 'uswest2demo' director
+          - 10.4.62.224 - 10.4.62.254 # leave this to 'ocfp-dev-prod' director
 
   # - name: cf-edge
   #   type: manual
@@ -227,13 +244,16 @@ networks:
     subnets:
       - range: 10.4.20.0/24
         gateway: 10.4.20.1
-        azs: ["z1"]
+        azs: [ z1 ]
         static: [10.4.20.6-10.4.20.16]
         dns: [1.1.1.1, 8.8.4.4]
         cloud_properties: {subnet: subnet-0a00811172726ce3b} #snw-dev-cf-core-0
         reserved:
           - 10.4.20.0-10.4.20.5
-          - 10.4.20.128 - 10.4.20.254 # leave this to 'ocfp-dev' director
+          # - 10.4.20.6 - 10.4.20.63 # leave this to 'dev' director
+          - 10.4.20.64 - 10.4.20.127 # leave this to 'ocfp-dev' director
+          - 10.4.20.128 - 10.4.20.191 # leave this to 'uswest2demo' director
+          - 10.4.20.192 - 10.4.20.254 # leave this to 'ocfp-dev-prod' director
       - range: 10.4.21.0/24
         gateway: 10.4.21.1
         azs: ["z2"]
@@ -242,7 +262,10 @@ networks:
         cloud_properties: {subnet: subnet-03e4614c67b6af3d5} #snw-dev-cf-core-1
         reserved:
           - 10.4.21.0-10.4.21.5
-          - 10.4.21.128 - 10.4.21.254 # leave this to 'ocfp-dev' director
+          # - 10.4.21.6 - 10.4.21.63 # leave this to 'dev' director
+          - 10.4.21.64 - 10.4.21.127 # leave this to 'ocfp-dev' director
+          - 10.4.21.128 - 10.4.21.191 # leave this to 'uswest2demo' director
+          - 10.4.21.192 - 10.4.21.254 # leave this to 'ocfp-dev-prod' director
       - range: 10.4.22.0/24
         gateway: 10.4.22.1
         azs: ["z3"]
@@ -251,7 +274,10 @@ networks:
         cloud_properties: {subnet: subnet-04ecdc31ba8c3d685} #snw-dev-cf-core-2
         reserved:
           - 10.4.22.0-10.4.22.5
-          - 10.4.22.128 - 10.4.22.254 # leave this to 'ocfp-dev' director
+          # - 10.4.22.6 - 10.4.22.63 # leave this to 'dev' director
+          - 10.4.22.64 - 10.4.22.127 # leave this to 'ocfp-dev' director
+          - 10.4.22.128 - 10.4.22.191 # leave this to 'uswest2demo' director
+          - 10.4.22.192 - 10.4.22.254 # leave this to 'ocfp-dev-prod' director
 
   - name: cf-runtime
     type: manual
@@ -264,7 +290,10 @@ networks:
         cloud_properties: {subnet: subnet-08f6940f71c779a15} #snw-dev-cf-runtime-0
         reserved:
           - 10.4.23.0-10.4.23.5
-          - 10.4.23.128 - 10.4.23.254 # leave this to 'ocfp-dev' director
+          # - 10.4.23.6 - 10.4.23.63 # leave this to 'dev' director
+          - 10.4.23.64 - 10.4.23.127 # leave this to 'ocfp-dev' director
+          - 10.4.23.128 - 10.4.23.191 # leave this to 'uswest2demo' director
+          - 10.4.23.192 - 10.4.23.254 # leave this to 'ocfp-dev-prod' director
       - range: 10.4.24.0/24
         gateway: 10.4.24.1
         azs: ["z2"]
@@ -273,7 +302,10 @@ networks:
         cloud_properties: {subnet: subnet-0964231d662ce7e9b} #snw-dev-cf-runtime-1
         reserved:
           - 10.4.24.0-10.4.24.5
-          - 10.4.24.128 - 10.4.24.254 # leave this to 'ocfp-dev' director
+          # - 10.4.24.6 - 10.4.24.63 # leave this to 'dev' director
+          - 10.4.24.64 - 10.4.24.127 # leave this to 'ocfp-dev' director
+          - 10.4.24.128 - 10.4.24.191 # leave this to 'uswest2demo' director
+          - 10.4.24.192 - 10.4.24.254 # leave this to 'ocfp-dev-prod' director
       - range: 10.4.25.0/24
         gateway: 10.4.25.1
         azs: ["z3"]
@@ -282,18 +314,21 @@ networks:
         cloud_properties: {subnet: subnet-0e513e543403b53ac} #snw-dev-cf-runtime-2
         reserved:
           - 10.4.25.0-10.4.25.5
-          - 10.4.25.128 - 10.4.25.254 # leave this to 'ocfp-dev' director
+          # - 10.4.25.6 - 10.4.25.63 # leave this to 'dev' director
+          - 10.4.25.64 - 10.4.25.127 # leave this to 'ocfp-dev' director
+          - 10.4.25.128 - 10.4.25.191 # leave this to 'uswest2demo' director
+          - 10.4.25.192 - 10.4.25.254 # leave this to 'ocfp-dev-prod' director
 
   - name: concourse-ips
     type: manual
     subnets:
       - range: 10.4.68.0/24
-      gateway: 10.4.68.1
-      azs: ["z1"]
-      static: [10.4.68.6-10.4.68.16]
-      dns: [1.1.1.1, 8.8.4.4]
-      cloud_properties: {subnet: subnet-004e38051f36dae09} #snw-dev-cf-edge-internal-0
-      reserved: [10.4.68.0-10.4.68.5]
+        gateway: 10.4.68.1
+        azs: ["z1"]
+        static: [10.4.68.6-10.4.68.16]
+        dns: [1.1.1.1, 8.8.4.4]
+        cloud_properties: {subnet: subnet-004e38051f36dae09} #snw-dev-cf-edge-internal-0
+        reserved: [10.4.68.0-10.4.68.5]
 
   - name: blacksmith
     type: manual

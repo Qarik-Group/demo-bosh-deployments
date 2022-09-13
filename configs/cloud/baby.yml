@@ -128,7 +128,7 @@ networks:
         cloud_properties: { subnet: subnet-0dcf8272f03fead6d } #snw-dev-infra-0
         reserved:
           - 10.4.69.0 - 10.4.69.5
-          - 10.4.69.128 - 10.4.69.254
+          - 10.4.69.128 - 10.4.69.254 # leave this to 'ocfp-dev-lab' director
   - name: cf-edge
     type: manual
     subnets:
@@ -140,7 +140,7 @@ networks:
         cloud_properties: { subnet: subnet-07d4502687a40fe9c }  #cf staging edge 1
         reserved:
           - 10.4.35.0 - 10.4.35.6
-          - 10.4.35.64 - 10.4.35.127
+          - 10.4.35.64 - 10.4.35.127 # leave this to 'ocfp-dev-lab' director
   - name: cf-runtime
     type: manual
     subnets:
@@ -152,7 +152,7 @@ networks:
         cloud_properties: { subnet: subnet-017e62bca32e491ea } #snw-dev-cf-edge-internal-0
         reserved:
           - 10.4.65.0 - 10.4.65.5
-          - 10.4.65.128 - 10.4.65.255
+          - 10.4.65.128 - 10.4.65.255 # leave this to 'ocfp-dev-lab' director
   - name: cf-core
     type: manual
     subnets:
@@ -164,7 +164,7 @@ networks:
         cloud_properties: { subnet: subnet-06001ccd9bca8ac63 } #snw-dev-cf-edge-internal-0
         reserved:
           - 10.4.66.0 - 10.4.66.5
-          - 10.4.66.128 - 10.4.66.255
+          - 10.4.66.128 - 10.4.66.255 # leave this to 'ocfp-dev-lab' director
   # - name: concourse-ips
   #   type: manual
   #   subnets:
