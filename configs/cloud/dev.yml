@@ -185,15 +185,19 @@ networks:
     static: [10.4.62.4-10.4.62.16]
     dns: [1.1.1.1, 8.8.4.4]
     cloud_properties: {subnet: subnet-0bdaf27eb328f7e4d} #snw-dev-cf-edge-internal-0
-    reserved: [10.4.62.0-10.4.62.3]
+    reserved:
+      - 10.4.62.0-10.4.62.3
+      - 10.4.62.64 - 10.4.62.126 # leave this to 'ocfp-dev' director
   - range: 10.4.62.128/25
     gateway: 10.4.62.129
     azs: ["z2"]
     static: [10.4.62.132-10.4.17.144]
     dns: [1.1.1.1, 8.8.4.4]
     cloud_properties: {subnet: subnet-048560ab22b7c345f} #snw-dev-cf-edge-internal-1
-    reserved: [10.4.62.128-10.4.62.131]
-    
+    reserved:
+      - 10.4.62.128-10.4.62.131
+      - 10.4.62.192 - 10.4.62.254 # leave this to 'ocfp-dev' director
+
     #- name: cf-edge
     #  type: manual
     #  subnets:
@@ -221,21 +225,27 @@ networks:
     static: [10.4.20.6-10.4.20.16]
     dns: [1.1.1.1, 8.8.4.4]
     cloud_properties: {subnet: subnet-0a00811172726ce3b} #snw-dev-cf-core-0
-    reserved: [10.4.20.0-10.4.20.5]
+    reserved:
+      - 10.4.20.0-10.4.20.5
+      - 10.4.20.128 - 10.4.20.254 # leave this to 'ocfp-dev' director
   - range: 10.4.21.0/24
     gateway: 10.4.21.1
     azs: ["z2"]
     static: [10.4.21.6-10.4.21.16]
     dns: [1.1.1.1, 8.8.4.4]
     cloud_properties: {subnet: subnet-03e4614c67b6af3d5} #snw-dev-cf-core-1
-    reserved: [10.4.21.0-10.4.21.5]
+    reserved:
+      - 10.4.21.0-10.4.21.5
+      - 10.4.21.128 - 10.4.21.254 # leave this to 'ocfp-dev' director
   - range: 10.4.22.0/24
     gateway: 10.4.22.1
     azs: ["z3"]
     static: [10.4.22.6-10.4.22.16]
     dns: [1.1.1.1, 8.8.4.4]
     cloud_properties: {subnet: subnet-04ecdc31ba8c3d685} #snw-dev-cf-core-2
-    reserved: [10.4.22.0-10.4.22.5]  
+    reserved:
+      - 10.4.22.0-10.4.22.5
+      - 10.4.22.128 - 10.4.22.254 # leave this to 'ocfp-dev' director
 
 - name: cf-runtime
   type: manual
@@ -246,21 +256,27 @@ networks:
     static: [10.4.23.6-10.4.23.16]
     dns: [1.1.1.1, 8.8.4.4]
     cloud_properties: {subnet: subnet-08f6940f71c779a15} #snw-dev-cf-runtime-0
-    reserved: [10.4.23.0-10.4.23.5]
+    reserved:
+      - 10.4.23.0-10.4.23.5
+      - 10.4.23.128 - 10.4.23.254 # leave this to 'ocfp-dev' director
   - range: 10.4.24.0/24
     gateway: 10.4.24.1
     azs: ["z2"]
     static: [10.4.24.6-10.4.24.16]
     dns: [1.1.1.1, 8.8.4.4]
     cloud_properties: {subnet: subnet-0964231d662ce7e9b} #snw-dev-cf-runtime-1
-    reserved: [10.4.24.0-10.4.24.5]
+    reserved:
+      - 10.4.24.0-10.4.24.5
+      - 10.4.24.128 - 10.4.24.254 # leave this to 'ocfp-dev' director
   - range: 10.4.25.0/24
     gateway: 10.4.25.1
     azs: ["z3"]
     static: [10.4.25.6-10.4.25.16]
     dns: [1.1.1.1, 8.8.4.4]
     cloud_properties: {subnet: subnet-0e513e543403b53ac} #snw-dev-cf-runtime-2
-    reserved: [10.4.25.0-10.4.25.5]  
+    reserved:
+      - 10.4.25.0-10.4.25.5
+      - 10.4.25.128 - 10.4.25.254 # leave this to 'ocfp-dev' director
 
 - name: concourse-ips                                                                
   type: manual                                                                      
