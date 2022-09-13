@@ -398,14 +398,3 @@ networks:
       dns: [1.1.1.1, 8.8.4.4]
       cloud_properties: {subnet: subnet-0dd034854c197dc41} # Subnet snw-dev-infra-0
       reserved: [10.4.18.0-10.4.18.3] # Reserved by AWS
-
-  - name: baby
-    type: manual
-    subnets:
-    - range: 10.4.63.0/24
-      gateway: 10.4.63.1
-      azs: ["z1"]
-      static: [10.4.63.4-10.4.63.6]
-      dns: [1.1.1.1, 8.8.4.4]
-      cloud_properties: {subnet: subnet-064b78e587e3b8bf5} # Subnet snw-dev-infra-0
-      reserved: [10.4.63.0-10.4.63.3,10.4.63.10-10.4.63.255] # Reserved by AWS
