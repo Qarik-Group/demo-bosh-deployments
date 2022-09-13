@@ -1,3 +1,6 @@
+################################################################################
+# Availability Zones
+################################################################################
 azs:
   - name: z1
     cloud_properties: {availability_zone: us-west-2a}
@@ -84,9 +87,6 @@ compilation:
 # VM Extensions
 ################################################################################
 vm_extensions:
-  # - {"name": "cf-elb"}             # CW: Appear to be deprecated
-  # - {"name": "ssh-elb"}            # CW: Appear to be deprecated
-  # - {"name": "cf-load-balanced"}   # CW: Appear to be deprecated
   - name: 100GB_ephemeral_disk
     cloud_properties:
       ephemeral_disk:
@@ -99,8 +99,6 @@ vm_extensions:
         type: gp3
   - name: cf-router-network-properties
     cloud_properties:
-    #  lb_target_groups:
-    #    - codex-cf-alb-tg
       elbs:
         - snw-dev-cf-elb
   - name: cf-tcp-router-network-properties
@@ -120,7 +118,7 @@ networks:
       - range: 10.4.69.0/24
         gateway: 10.4.69.1
         azs: [ z1 ]
-        static: [ 10.4.69.6 - 10.4.69.16 ]
+        static: [ 10.4.69.128 - 10.4.69.138 ]
         dns: [ 1.1.1.1, 8.8.4.4 ]
         cloud_properties: { subnet: subnet-0dcf8272f03fead6d } #snw-dev-infra-0
         reserved:
@@ -168,7 +166,9 @@ networks:
   #     - range: 10.4.68.0/24
   #       gateway: 10.4.68.1
   #       azs: [ z1 ]
-  #       static: [ 10.4.68.6 - 10.4.68.16 ]
+  #       static: [ 10.4.68.128 - 10.4.68.138 ]
   #       dns: [ 1.1.1.1, 8.8.4.4 ]
   #       cloud_properties: { subnet: subnet-004e38051f36dae09 } #snw-dev-cf-edge-internal-0
-  #       reserved: [ 10.4.68.0 - 10.4.68.5 ]
+  #       reserved:
+  #         - 10.4.68.0 - 10.4.68.5
+  #         - 10.4.68.6 - 10.4.68.127
