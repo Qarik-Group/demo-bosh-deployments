@@ -165,7 +165,7 @@ exodus:
   credhub_password: ((credhub_cli_user_password))
   credhub_url: https://10.4.63.6:8844
   credhub_username: credhub_cli_user
-  dated: 2022-09-13 03:59:26 +0000
+  dated: 2022-09-13 16:14:47 +0000
   deployer: ubuntu
   features: aws,bosh-dns-healthcheck,no-registry
   is_director: true
@@ -546,6 +546,48 @@ meta:
   vault: /secret/ocfp/dev/prod/bosh
 name: ocfp-dev-prod-bosh
 networks:
+- name: default
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-0ea631cc3ad19e04f
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.16.1
+    range: 10.4.16.0/24
+    reserved:
+    - 10.4.16.0-10.4.16.3
+    static:
+    - 10.4.16.4-10.4.16.16
+  - azs:
+    - z2
+    cloud_properties:
+      subnet: subnet-09a05edb82702379b
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.17.1
+    range: 10.4.17.0/24
+    reserved:
+    - 10.4.17.0-10.4.17.3
+    static:
+    - 10.4.17.4-10.4.17.16
+  - azs:
+    - z3
+    cloud_properties:
+      subnet: subnet-0dd034854c197dc41
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.18.1
+    range: 10.4.18.0/24
+    reserved:
+    - 10.4.18.0-10.4.18.3
+    static:
+    - 10.4.18.4-10.4.18.16
+  type: manual
 - name: compilation
   subnets:
   - azs:
@@ -572,9 +614,9 @@ networks:
     gateway: 10.4.29.1
     range: 10.4.29.0/28
     reserved:
-    - 10.4.29.0-10.4.29.3
+    - 10.4.29.0 - 10.4.29.3
     static:
-    - 10.4.29.4-10.4.29.14
+    - 10.4.29.10 - 10.4.29.11
   - azs:
     - z2
     cloud_properties:
@@ -585,9 +627,9 @@ networks:
     gateway: 10.4.29.17
     range: 10.4.29.16/28
     reserved:
-    - 10.4.29.16-10.4.29.19
+    - 10.4.29.16 - 10.4.29.19
     static:
-    - 10.4.29.20-10.4.29.30
+    - 10.4.29.26 - 10.4.29.27
   - azs:
     - z3
     cloud_properties:
@@ -598,9 +640,9 @@ networks:
     gateway: 10.4.29.33
     range: 10.4.29.32/28
     reserved:
-    - 10.4.29.32-10.4.29.35
+    - 10.4.29.32 - 10.4.29.35
     static:
-    - 10.4.29.36-10.4.29.46
+    - 10.4.29.42 - 10.4.29.43
   type: manual
 - name: cf-edge
   subnets:
@@ -615,8 +657,11 @@ networks:
     range: 10.4.62.0/25
     reserved:
     - 10.4.62.0-10.4.62.3
+    - 10.4.62.4 - 10.4.62.31
+    - 10.4.62.32 - 10.4.62.63
+    - 10.4.62.96 - 10.4.62.126
     static:
-    - 10.4.62.4-10.4.62.16
+    - 10.4.62.64-10.4.62.76
   - azs:
     - z2
     cloud_properties:
@@ -628,8 +673,11 @@ networks:
     range: 10.4.62.128/25
     reserved:
     - 10.4.62.128-10.4.62.131
+    - 10.4.62.132 - 10.4.62.159
+    - 10.4.62.160 - 10.4.62.191
+    - 10.4.62.224 - 10.4.62.254
     static:
-    - 10.4.62.132-10.4.17.144
+    - 10.4.62.192-10.4.17.204
   type: manual
 - name: cf-core
   subnets:
@@ -644,8 +692,11 @@ networks:
     range: 10.4.20.0/24
     reserved:
     - 10.4.20.0-10.4.20.5
+    - 10.4.20.6 - 10.4.20.63
+    - 10.4.20.64 - 10.4.20.127
+    - 10.4.20.192 - 10.4.20.254
     static:
-    - 10.4.20.6-10.4.20.16
+    - 10.4.20.128-10.4.20.138
   - azs:
     - z2
     cloud_properties:
@@ -657,8 +708,11 @@ networks:
     range: 10.4.21.0/24
     reserved:
     - 10.4.21.0-10.4.21.5
+    - 10.4.21.6 - 10.4.21.63
+    - 10.4.21.64 - 10.4.21.127
+    - 10.4.21.192 - 10.4.21.254
     static:
-    - 10.4.21.6-10.4.21.16
+    - 10.4.21.128-10.4.21.138
   - azs:
     - z3
     cloud_properties:
@@ -670,8 +724,11 @@ networks:
     range: 10.4.22.0/24
     reserved:
     - 10.4.22.0-10.4.22.5
+    - 10.4.22.6 - 10.4.22.63
+    - 10.4.22.64 - 10.4.22.127
+    - 10.4.22.192 - 10.4.22.254
     static:
-    - 10.4.22.6-10.4.22.16
+    - 10.4.22.128-10.4.22.138
   type: manual
 - name: cf-runtime
   subnets:
@@ -686,8 +743,11 @@ networks:
     range: 10.4.23.0/24
     reserved:
     - 10.4.23.0-10.4.23.5
+    - 10.4.23.6 - 10.4.23.63
+    - 10.4.23.64 - 10.4.23.127
+    - 10.4.23.192 - 10.4.23.254
     static:
-    - 10.4.23.6-10.4.23.16
+    - 10.4.23.128-10.4.23.138
   - azs:
     - z2
     cloud_properties:
@@ -699,8 +759,11 @@ networks:
     range: 10.4.24.0/24
     reserved:
     - 10.4.24.0-10.4.24.5
+    - 10.4.24.6 - 10.4.24.63
+    - 10.4.24.64 - 10.4.24.127
+    - 10.4.24.192 - 10.4.24.254
     static:
-    - 10.4.24.6-10.4.24.16
+    - 10.4.24.128-10.4.24.138
   - azs:
     - z3
     cloud_properties:
@@ -712,8 +775,11 @@ networks:
     range: 10.4.25.0/24
     reserved:
     - 10.4.25.0-10.4.25.5
+    - 10.4.25.6 - 10.4.25.63
+    - 10.4.25.64 - 10.4.25.127
+    - 10.4.25.192 - 10.4.25.254
     static:
-    - 10.4.25.6-10.4.25.16
+    - 10.4.25.128-10.4.25.138
   type: manual
 - name: blacksmith
   subnets:
@@ -843,48 +909,6 @@ networks:
     - 10.4.3.170-10.4.3.176
   type: manual
 - name: dev
-  subnets:
-  - azs:
-    - z1
-    cloud_properties:
-      subnet: subnet-0ea631cc3ad19e04f
-    dns:
-    - 1.1.1.1
-    - 8.8.4.4
-    gateway: 10.4.16.1
-    range: 10.4.16.0/24
-    reserved:
-    - 10.4.16.0-10.4.16.3
-    static:
-    - 10.4.16.4-10.4.16.16
-  - azs:
-    - z2
-    cloud_properties:
-      subnet: subnet-09a05edb82702379b
-    dns:
-    - 1.1.1.1
-    - 8.8.4.4
-    gateway: 10.4.17.1
-    range: 10.4.17.0/24
-    reserved:
-    - 10.4.17.0-10.4.17.3
-    static:
-    - 10.4.17.4-10.4.17.16
-  - azs:
-    - z3
-    cloud_properties:
-      subnet: subnet-0dd034854c197dc41
-    dns:
-    - 1.1.1.1
-    - 8.8.4.4
-    gateway: 10.4.18.1
-    range: 10.4.18.0/24
-    reserved:
-    - 10.4.18.0-10.4.18.3
-    static:
-    - 10.4.18.4-10.4.18.16
-  type: manual
-- name: default
   subnets:
   - azs:
     - z1
@@ -1089,7 +1113,7 @@ vm_types:
       encrypted: true
       size: 16384
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: blobstore
 - cloud_properties:
     ephemeral_disk:
@@ -1110,21 +1134,21 @@ vm_types:
       encrypted: true
       size: 65536
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: compilation
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 65536
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: concourse-worker
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 16384
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: credhub
 - cloud_properties:
     ephemeral_disk:
@@ -1138,14 +1162,14 @@ vm_types:
       encrypted: true
       size: 262144
       type: gp3
-    instance_type: t3.nano
+    instance_type: t3.small
   name: diego-cell
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 32768
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: diego-api
 - cloud_properties:
     ephemeral_disk:
@@ -1180,14 +1204,14 @@ vm_types:
       encrypted: true
       size: 16384
       type: gp3
-    instance_type: t3.medium
+    instance_type: t3.small
   name: log-api
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 16384
       type: gp3
-    instance_type: t3.nano
+    instance_type: t3.micro
   name: medium
 - cloud_properties:
     ephemeral_disk:
@@ -1201,14 +1225,14 @@ vm_types:
       encrypted: true
       size: 8192
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: nats
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 32768
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.medium
   name: postgres
 - cloud_properties:
     ephemeral_disk:
@@ -1229,21 +1253,21 @@ vm_types:
       encrypted: true
       size: 8192
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: small
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 10240
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: small-cf
 - cloud_properties:
     ephemeral_disk:
       encrypted: true
       size: 24576
       type: gp3
-    instance_type: t3.small
+    instance_type: t3.nano
   name: small-highmem
 - cloud_properties:
     ephemeral_disk:
@@ -1264,7 +1288,7 @@ vm_types:
       encrypted: true
       size: 81920
       type: gp3
-    instance_type: t3.nano
+    instance_type: t3.small
   name: thunder-dome
 - cloud_properties:
     ephemeral_disk:
