@@ -1,0 +1,35 @@
+kit:
+  name:    bosh
+  version: 2.2.4
+  features:
+    - aws
+    - bosh-dns-healthcheck
+      #- external-db-postgres
+    - no-registry
+    #- blacksmith-integration
+
+genesis:
+  env:            ocfp-dev-prod
+  bosh_env:       uswest2demo
+  min_version:    2.7.8
+
+
+params:
+  # These parameters are all that we need to specify for an Environment
+  # BOSH, since networking and VM type configuration comes from that cloud-config
+  #
+  bosh_network: baby
+  static_ip: 10.4.63.6
+
+  # BOSH on AWS needs to know what region to deploy to, and what
+  # default security groups to apply to all VMs by default.
+  #
+  # AWS credentials are stored in the Vault at
+  #   /secret/baby/bosh/bosh/aws
+  #
+  aws_region: us-west-2
+  aws_default_sgs:
+    - sg-06c4487cfe277c93d
+
+  # DNS Caching (for runtime config)
+  dns_cache: false

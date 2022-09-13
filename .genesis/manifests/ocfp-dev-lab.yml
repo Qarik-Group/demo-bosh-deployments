@@ -1,0 +1,1323 @@
+azs:
+- cloud_properties:
+    availability_zone: us-west-2a
+  name: z1
+- cloud_properties:
+    availability_zone: us-west-2b
+  name: z2
+- cloud_properties:
+    availability_zone: us-west-2c
+  name: z3
+bosh-variables:
+  access_key_id: REDACTED
+  admin_password: REDACTED
+  blobstore_agent_password: REDACTED
+  blobstore_ca:
+    certificate: REDACTED
+  blobstore_director_password: REDACTED
+  blobstore_server_tls:
+    certificate: REDACTED
+    private_key: REDACTED
+  credhub_admin_client_secret: REDACTED
+  credhub_cli_user_password: REDACTED
+  credhub_encryption_password: REDACTED
+  credhub_tls:
+    ca: REDACTED
+    certificate: REDACTED
+    private_key: REDACTED
+  default_key_name: vcap@ocfp-dev-lab
+  default_security_groups:
+  - sg-06c4487cfe277c93d
+  director_name: ocfp-dev-lab-bosh
+  director_ssl:
+    ca: REDACTED
+    certificate: REDACTED
+    private_key: REDACTED
+  hm_password: REDACTED
+  http_proxy: ""
+  https_proxy: ""
+  internal_ip: 10.4.63.5
+  internal_ntp:
+  - 169.254.169.123
+  nats_ca:
+    certificate: REDACTED
+    private_key: REDACTED
+  nats_clients_director_tls:
+    certificate: REDACTED
+    private_key: REDACTED
+  nats_clients_health_monitor_tls:
+    certificate: REDACTED
+    private_key: REDACTED
+  nats_password: REDACTED
+  nats_server_tls:
+    ca: REDACTED
+    certificate: REDACTED
+    private_key: REDACTED
+  no_proxy: ""
+  postgres_password: REDACTED
+  region: us-west-2
+  registry_password: REDACTED
+  secret_access_key: REDACTED
+  trusted_ca_cert: ""
+  uaa_admin_client_secret: REDACTED
+  uaa_clients_director_to_credhub: REDACTED
+  uaa_encryption_key_1: REDACTED
+  uaa_jwt_signing_key:
+    private_key: REDACTED
+    public_key: REDACTED
+  uaa_service_provider_ssl:
+    certificate: REDACTED
+    private_key: REDACTED
+  uaa_ssl:
+    ca: REDACTED
+    certificate: REDACTED
+    private_key: REDACTED
+compilation:
+  az: z1
+  network: default
+  reuse_compilation_vms: true
+  vm_type: large
+  workers: 5
+disk_types:
+- cloud_properties:
+    encrypted: true
+    type: gp3
+  disk_size: 2048
+  name: default
+- cloud_properties:
+    encrypted: true
+    type: gp3
+  disk_size: 2048
+  name: consul
+- cloud_properties:
+    encrypted: true
+    type: gp3
+  disk_size: 10240
+  name: concourse
+- cloud_properties:
+    encrypted: true
+    type: gp3
+  disk_size: 4096
+  name: postgres
+- cloud_properties:
+    encrypted: true
+    type: gp3
+  disk_size: 4096
+  name: blobstore
+- cloud_properties:
+    encrypted: true
+    type: gp3
+  disk_size: 1024
+  name: vault
+- cloud_properties:
+    encrypted: true
+    type: gp3
+  disk_size: 65536
+  name: bosh
+- cloud_properties:
+    encrypted: true
+    type: gp3
+  disk_size: 131072
+  name: bosh-large
+- cloud_properties:
+    encrypted: true
+    type: gp3
+  disk_size: 2048
+  name: shield
+- cloud_properties:
+    encrypted: true
+    type: gp3
+  disk_size: 51200
+  name: prometheus
+- cloud_properties:
+    encrypted: true
+    type: gp3
+  disk_size: 4096
+  name: rabbitmq
+- cloud_properties:
+    encrypted: true
+    type: gp3
+  disk_size: 5120
+  name: 5GB
+- cloud_properties:
+    encrypted: true
+    type: gp3
+  disk_size: 10240
+  name: 10GB
+- cloud_properties:
+    encrypted: true
+    type: gp3
+  disk_size: 100240
+  name: 100GB
+- cloud_properties:
+    encrypted: true
+    type: gp3
+  disk_size: 10240
+  name: minio
+exodus:
+  admin_password: REDACTED
+  admin_username: admin
+  bosh: uswest2demo
+  bosh-deployment-date: 2020-Nov-14 00:56:33 UTC
+  bosh-deployment-version: f518c39
+  ca_cert: REDACTED
+  credhub_ca_cert: ((credhub_tls.certificate))
+  credhub_password: ((credhub_cli_user_password))
+  credhub_url: https://10.4.63.5:8844
+  credhub_username: credhub_cli_user
+  dated: 2022-09-13 03:56:20 +0000
+  deployer: ubuntu
+  features: aws,bosh-dns-healthcheck,no-registry
+  is_director: true
+  kit_is_dev: false
+  kit_name: bosh
+  kit_version: 2.2.4
+  netop_sshkey: REDACTED
+  sysop_password: REDACTED
+  url: https://10.4.63.5:25555
+  use_create_env: false
+  vault_base: /secret/ocfp/dev/lab/bosh
+  version: 2.8.5
+genesis:
+  bosh_env: uswest2demo
+  ci_mount: /secret/ci/
+  env: ocfp-dev-lab
+  exodus_mount: /secret/exodus/
+  exodus_path: ocfp-dev-lab/bosh
+  min_version: 2.7.8
+  secrets_mount: /secret/
+  secrets_path: ocfp/dev/lab/bosh
+instance_groups:
+- azs:
+  - z1
+  instances: 1
+  jobs:
+  - name: bpm
+    release: bpm
+  - name: nats
+    release: bosh
+  - name: postgres-10
+    release: bosh
+  - name: blobstore
+    release: bosh
+  - name: director
+    release: bosh
+  - name: health_monitor
+    release: bosh
+  - name: uaa
+    properties:
+      encryption:
+        active_key_label: uaa-encryption-key-1
+        encryption_keys:
+        - label: uaa-encryption-key-1
+          passphrase: ((uaa_encryption_key_1))
+      login:
+        saml:
+          activeKeyId: uaa-saml-key-1
+          keys:
+            uaa-saml-key-1:
+              certificate: ((uaa_service_provider_ssl.certificate))
+              key: ((uaa_service_provider_ssl.private_key))
+              passphrase: ""
+      uaa:
+        clients:
+          admin:
+            authorities: bosh.admin
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: ((admin_password))
+          bosh_cli:
+            access-token-validity: 120
+            authorities: uaa.none
+            authorized-grant-types: password,refresh_token
+            override: true
+            refresh-token-validity: 86400
+            scope: openid,bosh.admin,bosh.read,bosh.*.admin,bosh.*.read,bosh.teams.*.admin,bosh.teams.*.read
+            secret: ""
+          concourse:
+            access-token-validity: 120
+            authorities: bosh.admin
+            authorized-grant-types: client_credentials
+            override: true
+            refresh-token-validity: 500
+            scope: ""
+            secret: REDACTED
+          credhub-admin:
+            access-token-validity: 3600
+            authorities: credhub.read,credhub.write
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: ((credhub_admin_client_secret))
+          credhub_cli:
+            access-token-validity: 60
+            authorities: ""
+            authorized-grant-types: password,refresh_token
+            override: true
+            refresh-token-validity: 1800
+            scope: credhub.read,credhub.write
+            secret: ""
+          credhub_cli_user:
+            access-token-validity: 3600
+            authorities: credhub.read,credhub.write
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: ((credhub_cli_user_password))
+          director_to_credhub:
+            access-token-validity: 3600
+            authorities: credhub.read,credhub.write
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: ((uaa_clients_director_to_credhub))
+          hm:
+            authorities: bosh.admin
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: ((hm_password))
+          prometheus:
+            authorities: bosh.read
+            authorized-grant-types: client_credentials, refresh_token
+            override: true
+            scope: bosh.read
+            secret: REDACTED
+          uaa_admin:
+            authorities: uaa.admin
+            authorized-grant-types: client_credentials
+            override: true
+            scope: ""
+            secret: ((uaa_admin_client_secret))
+        jwt:
+          policy:
+            active_key_id: uaa-jwt-key-1
+            keys:
+              uaa-jwt-key-1:
+                signingKey: ((uaa_jwt_signing_key.private_key))
+          revocable: true
+        scim:
+          groups:
+            bosh.admin: User has admin access on any Director
+            bosh.read: User has read access on any Director
+            bosh.releases.upload: User can upload new releases
+            bosh.stemcells.upload: User can upload new stemcells
+          users:
+          - groups:
+            - bosh.admin
+            name: admin
+            password: ((admin_password))
+          - groups:
+            - credhub.read
+            - credhub.write
+            name: credhub_cli_user
+            password: ((credhub_cli_user_password))
+        sslCertificate: ((uaa_ssl.certificate))
+        sslPrivateKey: ((uaa_ssl.private_key))
+        url: https://((internal_ip)):8443
+        zones:
+          internal:
+            hostnames:
+            - ((internal_ip))
+      uaadb:
+        address: 127.0.0.1
+        databases:
+        - name: uaa
+          tag: uaa
+        db_scheme: postgresql
+        port: 5432
+        roles:
+        - name: postgres
+          password: ((postgres_password))
+          tag: admin
+        tls: disabled
+    release: uaa
+  - name: bbr-uaadb
+    properties:
+      release_level_backup: true
+      uaadb:
+        address: 127.0.0.1
+        databases:
+        - name: uaa
+          tag: uaa
+        db_scheme: postgresql
+        port: 5432
+        roles:
+        - name: postgres
+          password: ((postgres_password))
+          tag: admin
+    release: uaa
+  - name: credhub
+    properties:
+      credhub:
+        authentication:
+          uaa:
+            ca_certs:
+            - ((uaa_ssl.ca))
+            url: https://((internal_ip)):8443
+            verification_key: ((uaa_jwt_signing_key.public_key))
+        authorization:
+          acls:
+            enabled: false
+        certificates:
+          concatenate_cas: true
+        data_storage:
+          database: credhub
+          host: 127.0.0.1
+          password: ((postgres_password))
+          port: 5432
+          require_tls: false
+          type: postgres
+          username: postgres
+        encryption:
+          keys:
+          - active: true
+            key_properties:
+              encryption_password: ((credhub_encryption_password))
+            provider_name: internal
+          providers:
+          - name: internal
+            type: internal
+        tls: ((credhub_tls))
+    release: credhub
+  - name: bbr-credhubdb
+    properties:
+      credhub:
+        data_storage:
+          database: credhub
+          host: 127.0.0.1
+          password: ((postgres_password))
+          port: 5432
+          require_tls: false
+          type: postgres
+          username: postgres
+      release_level_backup: true
+    release: credhub
+  - name: aws_cpi
+    release: bosh-aws-cpi
+  - name: user_add
+    properties:
+      persistent_homes: true
+      users:
+      - name: netop
+        public_key: REDACTED
+      - crypted_password: REDACTED
+        name: sysop
+    release: os-conf
+  name: bosh
+  networks:
+  - name: baby
+    static_ips:
+    - ((internal_ip))
+  persistent_disk_type: bosh
+  properties:
+    agent:
+      env:
+        bosh:
+          blobstores:
+          - options:
+              endpoint: https://((internal_ip)):25250
+              password: ((blobstore_agent_password))
+              tls:
+                cert:
+                  ca: ((blobstore_ca.certificate))
+              user: blobstore-user
+            provider: dav
+          ntp: ((internal_ntp))
+      mbus: nats://natsuser:((nats_password))@((internal_ip)):4222
+    aws:
+      access_key_id: ((access_key_id))
+      default_key_name: ((default_key_name))
+      default_security_groups: ((default_security_groups))
+      encrypted: false
+      region: ((region))
+      secret_access_key: ((secret_access_key))
+    blobstore:
+      address: ((internal_ip))
+      agent:
+        password: ((blobstore_agent_password))
+        user: blobstore-user
+      director:
+        password: ((blobstore_director_password))
+        user: director-user
+      port: 25250
+      provider: dav
+      tls:
+        cert:
+          ca: ((blobstore_ca.certificate))
+          certificate: ((blobstore_server_tls.certificate))
+          private_key: ((blobstore_server_tls.private_key))
+    director:
+      address: 127.0.0.1
+      config_server:
+        ca_cert: ((credhub_tls.ca))
+        enabled: true
+        uaa:
+          ca_cert: ((uaa_ssl.ca))
+          client_id: director_to_credhub
+          client_secret: ((uaa_clients_director_to_credhub))
+          url: https://((internal_ip)):8443
+        url: https://((internal_ip)):8844/api/
+      cpi_job: aws_cpi
+      db:
+        adapter: postgres
+        database: bosh
+        host: 127.0.0.1
+        listen_address: 127.0.0.1
+        password: ((postgres_password))
+        user: postgres
+      enable_dedicated_status_worker: true
+      enable_nats_delivered_templates: true
+      enable_post_deploy: true
+      events:
+        record_events: true
+      flush_arp: true
+      generate_vm_passwords: true
+      local_dns:
+        enabled: true
+        use_dns_addresses: true
+      name: ((director_name))
+      remove_dev_tools: true
+      ssl:
+        cert: ((director_ssl.certificate))
+        key: ((director_ssl.private_key))
+      trusted_certs: ((trusted_ca_cert))
+      user_management:
+        provider: uaa
+        uaa:
+          public_key: ((uaa_jwt_signing_key.public_key))
+          url: https://((internal_ip)):8443
+      workers: 4
+    env:
+      http_proxy: ((http_proxy))
+      https_proxy: ((https_proxy))
+      no_proxy: ((no_proxy))
+    hm:
+      director_account:
+        ca_cert: ((director_ssl.ca))
+        client_id: hm
+        client_secret: ((hm_password))
+        password: ((hm_password))
+        user: hm
+      resurrector:
+        minimum_down_jobs: 5
+        percent_threshold: 0.2
+        time_threshold: 600
+      resurrector_enabled: true
+    nats:
+      address: ((internal_ip))
+      password: ((nats_password))
+      tls:
+        ca: ((nats_server_tls.ca))
+        client_ca:
+          certificate: ((nats_ca.certificate))
+          private_key: ((nats_ca.private_key))
+        director:
+          certificate: ((nats_clients_director_tls.certificate))
+          private_key: ((nats_clients_director_tls.private_key))
+        health_monitor:
+          certificate: ((nats_clients_health_monitor_tls.certificate))
+          private_key: ((nats_clients_health_monitor_tls.private_key))
+        server:
+          certificate: ((nats_server_tls.certificate))
+          private_key: ((nats_server_tls.private_key))
+      user: natsuser
+    postgres:
+      adapter: postgres
+      additional_databases:
+      - uaa
+      - credhub
+      database: bosh
+      host: 127.0.0.1
+      listen_address: 127.0.0.1
+      password: ((postgres_password))
+      user: postgres
+  stemcell: default
+  vm_type: bosh
+kit:
+  features:
+  - aws
+  - bosh-dns-healthcheck
+  - no-registry
+  name: bosh
+  version: 2.2.4
+meta:
+  vault: /secret/ocfp/dev/lab/bosh
+name: ocfp-dev-lab-bosh
+networks:
+- name: compilation
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-0ea631cc3ad19e04f
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.16.1
+    range: 10.4.16.0/24
+    reserved:
+    - 10.4.16.0-10.4.16.244
+  type: manual
+- name: cf-db
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-03720ac266d128f29
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.29.1
+    range: 10.4.29.0/28
+    reserved:
+    - 10.4.29.0-10.4.29.3
+    static:
+    - 10.4.29.4-10.4.29.14
+  - azs:
+    - z2
+    cloud_properties:
+      subnet: subnet-015b5284fb46c07e6
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.29.17
+    range: 10.4.29.16/28
+    reserved:
+    - 10.4.29.16-10.4.29.19
+    static:
+    - 10.4.29.20-10.4.29.30
+  - azs:
+    - z3
+    cloud_properties:
+      subnet: subnet-05dcf16f08f546160
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.29.33
+    range: 10.4.29.32/28
+    reserved:
+    - 10.4.29.32-10.4.29.35
+    static:
+    - 10.4.29.36-10.4.29.46
+  type: manual
+- name: cf-edge
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-0bdaf27eb328f7e4d
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.62.1
+    range: 10.4.62.0/25
+    reserved:
+    - 10.4.62.0-10.4.62.3
+    static:
+    - 10.4.62.4-10.4.62.16
+  - azs:
+    - z2
+    cloud_properties:
+      subnet: subnet-048560ab22b7c345f
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.62.129
+    range: 10.4.62.128/25
+    reserved:
+    - 10.4.62.128-10.4.62.131
+    static:
+    - 10.4.62.132-10.4.17.144
+  type: manual
+- name: cf-core
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-0a00811172726ce3b
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.20.1
+    range: 10.4.20.0/24
+    reserved:
+    - 10.4.20.0-10.4.20.5
+    static:
+    - 10.4.20.6-10.4.20.16
+  - azs:
+    - z2
+    cloud_properties:
+      subnet: subnet-03e4614c67b6af3d5
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.21.1
+    range: 10.4.21.0/24
+    reserved:
+    - 10.4.21.0-10.4.21.5
+    static:
+    - 10.4.21.6-10.4.21.16
+  - azs:
+    - z3
+    cloud_properties:
+      subnet: subnet-04ecdc31ba8c3d685
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.22.1
+    range: 10.4.22.0/24
+    reserved:
+    - 10.4.22.0-10.4.22.5
+    static:
+    - 10.4.22.6-10.4.22.16
+  type: manual
+- name: cf-runtime
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-08f6940f71c779a15
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.23.1
+    range: 10.4.23.0/24
+    reserved:
+    - 10.4.23.0-10.4.23.5
+    static:
+    - 10.4.23.6-10.4.23.16
+  - azs:
+    - z2
+    cloud_properties:
+      subnet: subnet-0964231d662ce7e9b
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.24.1
+    range: 10.4.24.0/24
+    reserved:
+    - 10.4.24.0-10.4.24.5
+    static:
+    - 10.4.24.6-10.4.24.16
+  - azs:
+    - z3
+    cloud_properties:
+      subnet: subnet-0e513e543403b53ac
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.25.1
+    range: 10.4.25.0/24
+    reserved:
+    - 10.4.25.0-10.4.25.5
+    static:
+    - 10.4.25.6-10.4.25.16
+  type: manual
+- name: blacksmith
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-062565d28649eeb00
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.26.1
+    range: 10.4.26.0/24
+    reserved:
+    - 10.4.26.0-10.4.26.5
+    - 10.4.26.245-10.4.26.254
+    static:
+    - 10.4.26.6-10.4.26.16
+  - azs:
+    - z2
+    cloud_properties:
+      subnet: subnet-0d10710c119782f5f
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.27.1
+    range: 10.4.27.0/24
+    reserved:
+    - 10.4.27.0-10.4.27.5
+    static:
+    - 10.4.27.6-10.4.27.16
+  - azs:
+    - z3
+    cloud_properties:
+      subnet: subnet-06fb1168c8fba4e45
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.28.1
+    range: 10.4.28.0/24
+    reserved:
+    - 10.4.28.0-10.4.28.5
+    static:
+    - 10.4.28.6-10.4.28.16
+  type: manual
+- name: concourse-full
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-0f56fcba8b1ba95b3
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.1.1
+    range: 10.4.1.0/24
+    reserved:
+    - 10.4.1.0-10.4.1.99
+    static:
+    - 10.4.1.150-10.4.1.156
+  - azs:
+    - z2
+    cloud_properties:
+      subnet: subnet-04066d0a30fd1c020
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.2.1
+    range: 10.4.2.0/24
+    reserved:
+    - 10.4.2.0-10.4.2.99
+    static:
+    - 10.4.2.150-10.4.2.156
+  - azs:
+    - z3
+    cloud_properties:
+      subnet: subnet-0f2b10a0d103f3c83
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.3.1
+    range: 10.4.3.0/24
+    reserved:
+    - 10.4.3.0-10.4.3.99
+    static:
+    - 10.4.3.150-10.4.3.156
+  type: manual
+- name: concourse-full-dr
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-0f56fcba8b1ba95b3
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.1.1
+    range: 10.4.1.0/24
+    reserved:
+    - 10.4.1.0-10.4.1.99
+    static:
+    - 10.4.1.170-10.4.1.176
+  - azs:
+    - z2
+    cloud_properties:
+      subnet: subnet-04066d0a30fd1c020
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.2.1
+    range: 10.4.2.0/24
+    reserved:
+    - 10.4.2.0-10.4.2.99
+    static:
+    - 10.4.2.170-10.4.2.176
+  - azs:
+    - z3
+    cloud_properties:
+      subnet: subnet-0f2b10a0d103f3c83
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.3.1
+    range: 10.4.3.0/24
+    reserved:
+    - 10.4.3.0-10.4.3.99
+    static:
+    - 10.4.3.170-10.4.3.176
+  type: manual
+- name: dev
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-0ea631cc3ad19e04f
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.16.1
+    range: 10.4.16.0/24
+    reserved:
+    - 10.4.16.0-10.4.16.3
+    static:
+    - 10.4.16.4-10.4.16.16
+  - azs:
+    - z2
+    cloud_properties:
+      subnet: subnet-09a05edb82702379b
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.17.1
+    range: 10.4.17.0/24
+    reserved:
+    - 10.4.17.0-10.4.17.3
+    static:
+    - 10.4.17.4-10.4.17.16
+  - azs:
+    - z3
+    cloud_properties:
+      subnet: subnet-0dd034854c197dc41
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.18.1
+    range: 10.4.18.0/24
+    reserved:
+    - 10.4.18.0-10.4.18.3
+    static:
+    - 10.4.18.4-10.4.18.16
+  type: manual
+- name: default
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-0ea631cc3ad19e04f
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.16.1
+    range: 10.4.16.0/24
+    reserved:
+    - 10.4.16.0-10.4.16.3
+    static:
+    - 10.4.16.4-10.4.16.16
+  - azs:
+    - z2
+    cloud_properties:
+      subnet: subnet-09a05edb82702379b
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.17.1
+    range: 10.4.17.0/24
+    reserved:
+    - 10.4.17.0-10.4.17.3
+    static:
+    - 10.4.17.4-10.4.17.16
+  - azs:
+    - z3
+    cloud_properties:
+      subnet: subnet-0dd034854c197dc41
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.18.1
+    range: 10.4.18.0/24
+    reserved:
+    - 10.4.18.0-10.4.18.3
+    static:
+    - 10.4.18.4-10.4.18.16
+  type: manual
+- name: baby
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      subnet: subnet-064b78e587e3b8bf5
+    dns:
+    - 1.1.1.1
+    - 8.8.4.4
+    gateway: 10.4.63.1
+    range: 10.4.63.0/24
+    reserved:
+    - 10.4.63.0-10.4.63.3
+    - 10.4.63.10-10.4.63.255
+    static:
+    - 10.4.63.4-10.4.63.6
+  type: manual
+params:
+  aws_default_sgs:
+  - sg-06c4487cfe277c93d
+  aws_ebs_encryption: false
+  aws_key_name: vcap@ocfp-dev-lab
+  aws_region: us-west-2
+  bosh_disk_pool: bosh
+  bosh_disk_type: large
+  bosh_hostname: bosh
+  bosh_network: baby
+  bosh_vm_type: bosh
+  ca_validity_period: 5y
+  cert_validity_period: 1y
+  dns_cache: false
+  ntp:
+  - 169.254.169.123
+  remove_dev_tools: true
+  resurrector_minimum_down_jobs: 5
+  resurrector_percent_threshold: 0.2
+  resurrector_time_threshold: 600
+  session_timeout: 1
+  static_ip: 10.4.63.5
+releases:
+- name: bosh
+  sha1: 1eeb5067d342909b68cf5a38783a3421c2f53f55
+  url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-271.17.0-ubuntu-bionic-1.41-20211209-104853-348622355-20211209104855.tgz
+  version: 271.17.0
+- name: bpm
+  sha1: 9e8f0c84773523139e4bf02ec80fea872b04f9aa
+  url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bpm-1.1.15-ubuntu-bionic-1.41-20211209-104652-483576868-20211209104654.tgz
+  version: 1.1.15
+- name: uaa
+  sha1: 2583ae134bbe2c597246cca16c80de0b1b1543ef
+  url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/uaa-75.12.0-ubuntu-bionic-1.41-20211215-200249-606597073-20211215200253.tgz
+  version: 75.12.0
+- name: credhub
+  sha1: 5d0ff2e54abee6380013e09e5d796e42a5add0a3
+  url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/credhub-2.11.0-ubuntu-bionic-1.41-20211215-181021-327151235-20211215181022.tgz
+  version: 2.11.0
+- name: bosh-aws-cpi
+  sha1: c8fdf45dd3baa0c85f5f64b472b55b2ff3432cb4
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh-aws-cpi-release?v=91
+  version: 91
+- name: os-conf
+  sha1: 386293038ae3d00813eaa475b4acf63f8da226ef
+  url: https://bosh.io/d/github.com/cloudfoundry/os-conf-release?v=22.1.2
+  version: 22.1.2
+stemcells:
+- alias: default
+  os: ubuntu-bionic
+  version: latest
+update:
+  canaries: 1
+  canary_watch_time: 30000-600000
+  max_in_flight: 1
+  serial: true
+  update_watch_time: 30000-600000
+vm_extensions:
+- cloud_properties:
+    ephemeral_disk:
+      size: 102400
+      type: gp3
+  name: 100GB_ephemeral_disk
+- cloud_properties:
+    ephemeral_disk:
+      size: 51200
+      type: gp3
+  name: 50GB_ephemeral_disk
+- cloud_properties:
+    elbs:
+    - snw-dev-cf-elb
+  name: cf-router-network-properties
+- cloud_properties:
+    elbs:
+    - dev-cf-tcp-lb
+  name: cf-tcp-router-network-properties
+- name: diego-ssh-proxy-network-properties
+vm_types:
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 32768
+      type: gp3
+    instance_type: t3.small
+  name: api
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 16384
+      type: gp3
+    instance_type: t3.nano
+  name: as-api
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 16384
+      type: gp3
+    instance_type: t3.nano
+  name: as-broker
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 16384
+      type: gp3
+    instance_type: t3.nano
+  name: as-collector
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 16384
+      type: gp3
+    instance_type: t3.nano
+  name: as-engine
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 16384
+      type: gp3
+    instance_type: t3.nano
+  name: as-operator
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 16384
+      type: gp3
+    instance_type: t3.nano
+  name: as-scaler
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 16384
+      type: gp3
+    instance_type: t3.nano
+  name: as-scheduler
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 8192
+      type: gp3
+    instance_type: t3.nano
+  name: bbs
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 16384
+      type: gp3
+    instance_type: t3.small
+  name: blobstore
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 24576
+      type: gp3
+    instance_type: t3.medium
+  name: bosh
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 8192
+      type: gp3
+    instance_type: t3.nano
+  name: cc-worker
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 65536
+      type: gp3
+    instance_type: t3.small
+  name: compilation
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 65536
+      type: gp3
+    instance_type: t3.small
+  name: concourse-worker
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 16384
+      type: gp3
+    instance_type: t3.small
+  name: credhub
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 8192
+      type: gp3
+    instance_type: t3.nano
+  name: default
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 262144
+      type: gp3
+    instance_type: t3.nano
+  name: diego-cell
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 32768
+      type: gp3
+    instance_type: t3.small
+  name: diego-api
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 32768
+      type: gp3
+    instance_type: t3.medium
+  name: doppler
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 8192
+      type: gp3
+    instance_type: t3.small
+  name: errand
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 8192
+      type: gp3
+    instance_type: t3.small
+  name: haproxy
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 32768
+      type: gp3
+    instance_type: t3.small
+  name: large
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 16384
+      type: gp3
+    instance_type: t3.medium
+  name: log-api
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 16384
+      type: gp3
+    instance_type: t3.nano
+  name: medium
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 10240
+      type: gp3
+    instance_type: t3.nano
+  name: minimal
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 8192
+      type: gp3
+    instance_type: t3.small
+  name: nats
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 32768
+      type: gp3
+    instance_type: t3.small
+  name: postgres
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 8192
+      type: gp3
+    instance_type: t3.small
+  name: router
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 8192
+      type: gp3
+    instance_type: t3.small
+  name: scheduler
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 8192
+      type: gp3
+    instance_type: t3.small
+  name: small
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 10240
+      type: gp3
+    instance_type: t3.small
+  name: small-cf
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 24576
+      type: gp3
+    instance_type: t3.small
+  name: small-highmem
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 8192
+      type: gp3
+    instance_type: t3.small
+  name: syslogger
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 8192
+      type: gp3
+    instance_type: t3.nano
+  name: tcp-router
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 81920
+      type: gp3
+    instance_type: t3.nano
+  name: thunder-dome
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 16384
+      type: gp3
+    instance_type: t3.small
+  name: uaa
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 10240
+      type: gp3
+    instance_type: t3.medium
+  name: blacksmith
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 10240
+      type: gp3
+    instance_type: t3.small
+  name: blacksmith-redis-small
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 10240
+      type: gp3
+    instance_type: t3.medium
+  name: blacksmith-redis-medium
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 10240
+      type: gp3
+    instance_type: t3.large
+  name: blacksmith-redis-large
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 10240
+      type: gp3
+    instance_type: t3.small
+  name: blacksmith-rabbitmq-medium
+- cloud_properties:
+    ephemeral_disk:
+      encrypted: true
+      size: 10240
+      type: gp3
+    instance_type: t3.medium
+  name: blacksmith-rabbitmq-large
+- cloud_properties:
+    ephemeral_disk:
+      size: 10240
+      type: gp3
+    instance_type: t3.small
+  name: concourse
