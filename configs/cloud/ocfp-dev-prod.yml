@@ -106,11 +106,11 @@ vm_extensions:
   - name: cf-router-network-properties
     cloud_properties:
       elbs:
-        - snw-dev-cf-elb
+        - snw-prod-cf-elb
   - name: cf-tcp-router-network-properties
     cloud_properties:
       elbs:
-        - dev-cf-tcp-lb
+        - prod-cf-tcp-lb
 
   - name: diego-ssh-proxy-network-properties
 
